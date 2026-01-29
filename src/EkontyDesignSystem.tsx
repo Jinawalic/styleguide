@@ -175,54 +175,22 @@ const CodeSnippetModal = ({ data, onClose }: { data: { title: string, code: stri
     );
 };
 
-const ColorPalette = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
-    const handleColorClick = (color: { name: string, hex: string, role?: string }) => {
-        // Determine the variable name based on the color (basic heuristic)
-        const varName = color.name.toLowerCase().replace(/\s+/g, '-');
-        const isBrand = varName.includes('brand') || varName.includes('surface');
-        const isSemantic = ['success', 'warning', 'danger', 'info'].some(k => varName.includes(k));
-
-        // Generate code snippet based on the type of color
-        const codeSnippet = isBrand || isSemantic
-            ? `import React from 'react';
-
-const ${color.name.replace(/\s+/g, '')}Usage = () => {
-    return (
-        // Using Tailwind Utility
-        <div className="bg-[${color.hex}] p-4 rounded-xl shadow-sm">
-            <h4 className="font-bold text-white">${color.name}</h4>
-            <p className="text-white/80 text-sm">Hex: ${color.hex}</p>
-        </div>
-    );
-};`
-            : `import React from 'react';
-
-const Neutral${color.name.replace(/[^0-9]/g, '')}Usage = () => {
-    return (
-        <div className="flex flex-col gap-2">
-            {/* Background Usage */}
-            <div className="w-full h-12 bg-[${color.hex}] rounded-lg"></div>
-            
-            {/* Text Usage */}
-            <p className="text-[${color.hex}] font-bold">
-                This text uses the ${color.name} shade.
-            </p>
-        </div>
-    );
-};`;
-        onShowCode(color.name, codeSnippet);
-    };
-
+const ColorPalette = ({ onViewDetail }: { onViewDetail: (section: string) => void }) => {
     return (
         <div className="space-y-8">
             <section>
-                <h3 className="text-xl font-semibold mb-4 font-heading">Brand Palette</h3>
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold font-heading">Brand Palette</h3>
+                    <button onClick={() => onViewDetail('colors-brand')} className="text-xs font-bold text-brand hover:underline flex items-center gap-1">
+                        <HugeiconsIcon icon={Code} size={14} />
+                        View Code
+                    </button>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {colors.brand.map((color) => (
                         <div
                             key={color.hex}
-                            onClick={() => handleColorClick(color)}
-                            className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center cursor-pointer hover:shadow-md hover:scale-[1.02] transition-all duration-200 group"
+                            className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center hover:shadow-md hover:scale-[1.02] transition-all duration-200 group"
                         >
                             <div className="w-full h-24 rounded-xl mb-3 shadow-inner group-hover:ring-4 ring-brand/5 transition-all" style={{ backgroundColor: color.hex }}></div>
                             <p className="font-bold text-slate-800">{color.name}</p>
@@ -234,13 +202,18 @@ const Neutral${color.name.replace(/[^0-9]/g, '')}Usage = () => {
             </section>
 
             <section>
-                <h3 className="text-xl font-semibold mb-4 font-heading">Semantic Colors</h3>
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold font-heading">Semantic Colors</h3>
+                    <button onClick={() => onViewDetail('colors-semantic')} className="text-xs font-bold text-brand hover:underline flex items-center gap-1">
+                        <HugeiconsIcon icon={Code} size={14} />
+                        View Code
+                    </button>
+                </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {colors.semantic.map((color) => (
                         <div
                             key={color.name}
-                            onClick={() => handleColorClick(color)}
-                            className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center cursor-pointer hover:shadow-md hover:scale-[1.02] transition-all duration-200 group"
+                            className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center hover:shadow-md hover:scale-[1.02] transition-all duration-200 group"
                         >
                             <div className="w-full h-20 rounded-xl mb-3 shadow-inner group-hover:ring-4 ring-brand/5 transition-all" style={{ backgroundColor: color.hex }}></div>
                             <p className="font-bold text-slate-800">{color.name}</p>
@@ -252,14 +225,19 @@ const Neutral${color.name.replace(/[^0-9]/g, '')}Usage = () => {
             </section>
 
             <section>
-                <h3 className="text-xl font-semibold mb-4 font-heading">Neutral Palette (Slate)</h3>
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-semibold font-heading">Neutral Palette (Slate)</h3>
+                    <button onClick={() => onViewDetail('colors-neutral')} className="text-xs font-bold text-brand hover:underline flex items-center gap-1">
+                        <HugeiconsIcon icon={Code} size={14} />
+                        View Code
+                    </button>
+                </div>
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                     <div className="grid grid-cols-2 sm:grid-cols-5 md:grid-cols-10 gap-2">
                         {colors.neutrals.map((shade) => (
                             <div
                                 key={shade.label}
-                                onClick={() => handleColorClick({ name: `Slate ${shade.label}`, hex: shade.hex, role: 'Neutral Scale' })}
-                                className="flex flex-col items-center cursor-pointer group"
+                                className="flex flex-col items-center group"
                             >
                                 <div
                                     className="w-full h-12 rounded-lg mb-2 border border-slate-200 group-hover:scale-110 group-hover:shadow-md transition-all duration-200"
@@ -286,26 +264,18 @@ const typography = [
     { name: 'Caption', size: '12px', weight: '500', family: 'Roboto', class: 'text-[12px] font-medium leading-none font-body uppercase tracking-wider' },
 ];
 
-const TypographyScale = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
-    const handleTypoClick = (style: typeof typography[0]) => {
-        const code = `// Font Family: ${style.family}
-// Font Weight: ${style.weight}
-// Font Size: ${style.size}
-
-<div className="${style.class}">
-    The quick brown fox jumps over the lazy dog
-</div>`;
-        onShowCode(style.name, code);
-    };
-
+const TypographyScale = ({ onViewDetail }: { onViewDetail: (section: string) => void }) => {
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-            <div className="p-4 bg-blue-50/50 border-b border-blue-100/50 text-blue-600 text-xs font-bold flex items-center gap-2">
-                <HugeiconsIcon icon={Info} size={14} />
-                Click any row or text to view code
+            <div className="p-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Type Scale</span>
+                <button onClick={() => onViewDetail('typography')} className="text-xs font-bold text-brand hover:underline flex items-center gap-1">
+                    <HugeiconsIcon icon={Code} size={14} />
+                    View Code
+                </button>
             </div>
             <table className="w-full text-left border-collapse">
-                <thead className="bg-slate-50 border-b border-slate-100">
+                <thead className="bg-slate-50/50 border-b border-slate-100">
                     <tr>
                         <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Style</th>
                         <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Preview</th>
@@ -314,30 +284,18 @@ const TypographyScale = ({ onShowCode }: { onShowCode: (title: string, code: str
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                     {typography.map((style) => (
-                        <tr key={style.name} onClick={() => handleTypoClick(style)} className="hover:bg-slate-50 relative group transition-colors cursor-pointer">
+                        <tr key={style.name} className="hover:bg-slate-50 transition-colors">
                             <td className="p-4 align-top">
-                                <span className="text-sm font-bold text-slate-700 group-hover:text-brand transition-colors">{style.name}</span>
+                                <span className="text-sm font-bold text-slate-700">{style.name}</span>
                             </td>
                             <td className="p-4">
                                 <div className={style.class}>The quick brown fox jumps over the lazy dog</div>
                             </td>
-                            <td className="p-4 align-top relative min-w-[120px]">
-                                <div className="text-[10px] space-y-1 text-slate-500 group-hover:opacity-20 transition-opacity duration-200">
+                            <td className="p-4 align-top">
+                                <div className="text-[10px] space-y-1 text-slate-500">
                                     <p><span className="font-bold">Size:</span> {style.size}</p>
                                     <p><span className="font-bold">Weight:</span> {style.weight}</p>
                                     <p><span className="font-bold">Family:</span> {style.family}</p>
-                                </div>
-                                <div className="absolute inset-0 flex items-center justify-end px-4 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none">
-                                    <button
-                                        className="bg-slate-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-2 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all pointer-events-auto hover:bg-brand"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleTypoClick(style);
-                                        }}
-                                    >
-                                        <HugeiconsIcon icon={Code} size={14} />
-                                        <span>View Code</span>
-                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -428,7 +386,7 @@ const Button = ({ variant = 'primary', size = 'md', children, isLoading = false,
         ${variants[variant]} 
         ${variant !== 'icon' ? sizes[size] : ''} 
         ${fullWidth ? 'w-full' : ''}
-      `}
+`}
             {...props}
         >
             {isLoading ? (
@@ -466,11 +424,11 @@ const Input = ({ label, placeholder, type = 'text', error, icon: Icon, ...props 
                     type={inputType}
                     placeholder={placeholder}
                     className={`
-            w-full bg-white border-2 rounded-xl py-2 transition-all outline-none font-body text-sm
-            ${Icon ? 'pl-11 pr-4' : 'px-4'}
-            ${error ? 'border-danger focus:ring-4 focus:ring-danger/10' : 'border-slate-200 focus:border-brand focus:ring-4 focus:ring-brand/10'}
-            placeholder:text-slate-400
-          `}
+                        w-full bg-white border-2 rounded-xl py-2 transition-all outline-none font-body text-sm
+                        ${Icon ? 'pl-11 pr-4' : 'px-4'}
+                        ${error ? 'border-danger focus:ring-4 focus:ring-danger/10' : 'border-slate-200 focus:border-brand focus:ring-4 focus:ring-brand/10'}
+                        placeholder:text-slate-400
+                    `}
                     {...props}
                 />
                 {isPassword && (
@@ -505,10 +463,10 @@ const Select = ({ label, error, icon: Icon, children, ...props }: SelectProps) =
             )}
             <select
                 className={`
-                    w-full bg-white border-2 rounded-xl py-2 transition-all outline-none font-body text-sm appearance-none
-                    ${Icon ? 'pl-11 pr-10' : 'px-4 pr-10'}
-                    ${error ? 'border-danger focus:ring-4 focus:ring-danger/10' : 'border-slate-200 focus:border-brand focus:ring-4 focus:ring-brand/10'}
-                `}
+                w-full bg-white border-2 rounded-xl py-2 transition-all outline-none font-body text-sm appearance-none
+                ${Icon ? 'pl-11 pr-10' : 'px-4 pr-10'}
+                ${error ? 'border-danger focus:ring-4 focus:ring-danger/10' : 'border-slate-200 focus:border-brand focus:ring-4 focus:ring-brand/10'}
+            `}
                 {...props}
             >
                 {children}
@@ -612,16 +570,18 @@ const MediaPlaceholder = ({ title = "Media Preview" }: MediaPlaceholderProps) =>
 );
 
 // --- PILLAR 6: VOICE & TONE ---
-const CardShowcase = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => (
+const CardShowcase = ({ onViewDetail }: { onViewDetail: (section: string) => void }) => (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        {/* Type 1: Text-Only Card */}
+        <div className="col-span-1 md:col-span-3 mb-2 flex justify-end">
+            <button onClick={() => onViewDetail('cards')} className="text-xs font-bold text-brand hover:underline flex items-center gap-1">
+                <HugeiconsIcon icon={Code} size={14} />
+                View Code
+            </button>
+        </div>
         <div
-            onClick={() => onShowCode('Text-Only Card', `<div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all duration-300 group">\n    <div>\n        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-4">\n            Product Update\n        </div>\n        <h4 className="text-xl font-bold text-slate-900 mb-3 font-heading leading-tight">Empowering Marketplace Operations</h4>\n        <p className="text-slate-600 text-sm font-body leading-relaxed mb-6">\n            Our design system bridges the gap between complex operations and intuitive human interaction, ensuring every user feels in control.\n        </p>\n    </div>\n    <button className="text-brand text-sm font-bold inline-flex items-center group-hover:gap-2 transition-all">\n        Learn more <HugeiconsIcon icon={ArrowRight} size={16} className="ml-1" />\n    </button>\n</div>`)}
-            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all duration-300 group cursor-pointer relative"
+            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all duration-300 group cursor-default relative"
         >
-            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-slate-900/10 rounded-full text-slate-600 pointer-events-none">
-                <HugeiconsIcon icon={Copy} size={16} />
-            </div>
+
             <div>
                 <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-4">
                     Product Update
@@ -636,14 +596,8 @@ const CardShowcase = ({ onShowCode }: { onShowCode: (title: string, code: string
             </button>
         </div>
 
-        {/* Type 2: Image + Text Card */}
-        <div
-            onClick={() => onShowCode('Image + Text Card', `<div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-all duration-300">\n    <div className="h-48 w-full overflow-hidden relative">\n        <img src="/images/card-banner.png" className="w-full h-full object-cover" />\n        <div className="absolute top-4 left-4">\n            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-[10px] font-bold text-slate-800 shadow-sm uppercase tracking-wider">New Arrival</span>\n        </div>\n    </div>\n    <div className="p-6">\n        <h4 className="text-lg font-bold text-slate-900 mb-2 font-heading">Vibrant Listing Styles</h4>\n        <p className="text-slate-600 text-xs font-body leading-relaxed mb-4">\n            Discover how our new visual architecture enhances standard product listings with dynamic motion.\n        </p>\n        <div className="flex items-center justify-between">\n            <span className="text-brand font-bold text-sm">$299.00</span>\n            <button className="p-2 bg-slate-50 rounded-lg text-slate-400 hover:text-brand hover:bg-brand/5 transition-colors">\n                <HugeiconsIcon icon={Plus} size={18} />\n            </button>\n        </div>\n    </div>\n</div>`)}
-            className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer group relative"
-        >
-            <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-slate-900/10 rounded-full text-white pointer-events-none">
-                <HugeiconsIcon icon={Copy} size={16} />
-            </div>
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-all duration-300 group cursor-default relative">
+
             <div className="h-48 w-full overflow-hidden relative">
                 <img src="/images/card-banner.png" alt="Marketplace Banner" className="w-full h-full object-cover" />
                 <div className="absolute top-4 left-4">
@@ -664,14 +618,8 @@ const CardShowcase = ({ onShowCode }: { onShowCode: (title: string, code: string
             </div>
         </div>
 
-        {/* Type 3: User Details Card */}
-        <div
-            onClick={() => onShowCode('User Details Card', `<div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">\n    <div className="flex items-center gap-4 mb-6">\n        <div className="w-16 h-16 rounded-full border-2 border-brand/20 p-1 relative">\n            <img src="/images/card-avatar.png" className="w-14 h-14 rounded-full object-cover" />\n            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success border-2 border-white rounded-full"></div>\n        </div>\n        <div>\n            <h4 className="font-bold text-slate-900 text-lg leading-tight">Sarah David</h4>\n            <p className="text-slate-500 text-xs font-medium">Verified 4.9 ★★★★★</p>\n        </div>\n    </div>\n    <p className="text-slate-600 text-sm font-body leading-relaxed mb-6 italic">\n        "Ekonty has completely transformed how I manage my boutique operations. The interface is just so intuitive!"\n    </p>\n    <div className="flex gap-2">\n        <Button variant="secondary" size="sm" fullWidth>Message</Button>\n        <Button variant="primary" size="sm" fullWidth>View Profile</Button>\n    </div>\n</div>`)}
-            className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 cursor-pointer group relative"
-        >
-            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-slate-900/10 rounded-full text-slate-600 pointer-events-none">
-                <HugeiconsIcon icon={Copy} size={16} />
-            </div>
+        <div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 group cursor-default relative">
+
             <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full border-2 border-brand/20 p-1 relative">
                     <img src="/images/card-avatar.png" alt="User Avatar" className="w-14 h-14 rounded-full object-cover" />
@@ -690,72 +638,96 @@ const CardShowcase = ({ onShowCode }: { onShowCode: (title: string, code: string
                 <Button variant="primary" size="sm" fullWidth>View Profile</Button>
             </div>
         </div>
-    </div>
+    </div >
 );
 
 // --- PILLAR 7: INTERACTION & MOTION ---
-const InteractionShowcase = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
+const InteractionShowcase = ({ onViewDetail }: { onViewDetail: (section: string) => void }) => {
     return (
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-                <div
-                    className="space-y-3 cursor-pointer group"
-                    onClick={() => onShowCode('Hover Interaction', `<div className="h-20 w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center cursor-pointer hover:bg-brand hover:text-white hover:scale-105 transition-all duration-300 group">\n    <span className="text-sm font-bold group-hover:translate-x-1 transition-transform">Hover Me</span>\n</div>`)}
-                >
+        <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 relative">
+            <div className="absolute top-4 right-4">
+                <button onClick={() => onViewDetail('interactions')} className="text-xs font-bold text-brand hover:underline flex items-center gap-1">
+                    <HugeiconsIcon icon={Code} size={14} />
+                    View Code
+                </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 pt-4">
+                <div className="space-y-3 cursor-default group">
                     <p className="text-xs font-bold text-slate-400 uppercase">Hover Effect</p>
                     <div className="h-20 w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center hover:bg-brand hover:text-white hover:scale-105 transition-all duration-300 group-hover:border-transparent">
                         <span className="text-sm font-bold group-hover:translate-x-1 transition-transform">Hover Me</span>
                     </div>
                 </div>
 
-                <div className="space-y-3 cursor-pointer group relative">
+                <div className="space-y-3 cursor-default group">
                     <p className="text-xs font-bold text-slate-400 uppercase">Active State</p>
-                    <div className="relative">
-                        <div
-                            className="h-20 w-full rounded-xl flex items-center justify-center cursor-pointer select-none transition-all duration-100 shadow-sm bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95"
-                        >
-                            <span className="text-sm font-bold">Click Me</span>
-                        </div>
-                        <button
-                            onClick={(e) => { e.stopPropagation(); onShowCode('Active State', `<div className="h-20 w-full rounded-xl flex items-center justify-center cursor-pointer select-none transition-all duration-100 shadow-sm bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95">\n    <span className="text-sm font-bold">Click Me</span>\n</div>`); }}
-                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-slate-900/10 rounded-full text-slate-600 hover:bg-slate-900/20"
-                            title="View Code"
-                        >
-                            <HugeiconsIcon icon={Copy} size={14} />
-                        </button>
+                    <div className="h-20 w-full rounded-xl flex items-center justify-center cursor-pointer select-none transition-all duration-100 shadow-sm bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95">
+                        <span className="text-sm font-bold">Click Me</span>
                     </div>
                 </div>
 
-                <div className="space-y-3 cursor-pointer group relative">
+                <div className="space-y-3 cursor-default group">
                     <p className="text-xs font-bold text-slate-400 uppercase">Focus State</p>
-                    <div className="relative">
-                        <button onClick={(e) => e.stopPropagation()} className="h-20 w-full bg-white border-2 border-slate-200 rounded-xl flex items-center justify-center outline-none focus-visible:ring-4 focus-visible:ring-brand/20 focus-visible:border-brand transition-all">
-                            <span className="text-sm font-bold text-slate-600">Tab to Focus</span>
-                        </button>
-                        <button
-                            onClick={(e) => { e.stopPropagation(); onShowCode('Focus State', `<button className="h-20 w-full bg-white border-2 border-slate-200 rounded-xl flex items-center justify-center outline-none focus-visible:ring-4 focus-visible:ring-brand/20 focus-visible:border-brand transition-all">\n    <span className="text-sm font-bold text-slate-600">Tab to Focus</span>\n</button>`); }}
-                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-2 bg-slate-900/10 rounded-full text-slate-600 hover:bg-slate-900/20"
-                            title="View Code"
-                        >
-                            <HugeiconsIcon icon={Copy} size={14} />
-                        </button>
-                    </div>
+                    <button className="h-20 w-full bg-white border-2 border-slate-200 rounded-xl flex items-center justify-center outline-none focus-visible:ring-4 focus-visible:ring-brand/20 focus-visible:border-brand transition-all">
+                        <span className="text-sm font-bold text-slate-600">Tab to Focus</span>
+                    </button>
                 </div>
 
-                <div
-                    className="space-y-3 cursor-pointer"
-                    onClick={() => onShowCode('Motion (Scale)', `import { HugeiconsIcon } from '@hugeicons/react';
-import { CheckCircle } from '@hugeicons/react/outline';
-
-<div className="h-20 w-full bg-success/10 border border-success/20 rounded-xl flex items-center justify-center cursor-pointer group hover:rotate-2 transition-transform duration-300">
-    <HugeiconsIcon icon={CheckCircle} className="w-8 h-8 text-success group-hover:scale-125 transition-transform" />
-</div>`)}
-                >
+                <div className="space-y-3 cursor-default group">
                     <p className="text-xs font-bold text-slate-400 uppercase">Motion (Scale)</p>
                     <div className="h-20 w-full bg-success/10 border border-success/20 rounded-xl flex items-center justify-center group hover:rotate-2 transition-transform duration-300">
-                        <HugeiconsIcon icon={CheckCircle} className="w-8 h-8 text-success group-hover:scale-125 transition-transform" />
+                        <HugeiconsIcon icon={CheckCircle} size={32} className="text-success group-hover:scale-125 transition-transform" />
                     </div>
                 </div>
+            </div>
+        </div>
+    );
+};
+
+// --- COMPONENT DETAIL VIEW ---
+interface ComponentExample {
+    title: string;
+    description?: string;
+    preview: React.ReactNode;
+    code: string;
+}
+
+const ComponentDetailView = ({
+    title,
+    examples,
+    onBack
+}: {
+    title: string,
+    examples: ComponentExample[],
+    onBack: () => void
+}) => {
+    return (
+        <div className="animate-in fade-in slide-in-from-right duration-300">
+            <button
+                onClick={onBack}
+                className="mb-6 flex items-center gap-2 text-2xl font-bold text-slate-500 hover:text-slate-900 transition-colors"
+            >
+                <HugeiconsIcon icon={ChevronRight} size={18} className="rotate-180" />
+                Back to Components
+            </button>
+
+            <h2 className="text-3xl font-bold text-slate-900 font-heading mb-8">{title}</h2>
+
+            <div className="space-y-12">
+                {examples.map((example, idx) => (
+                    <div key={idx} className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                        <div className="p-4 border-b border-slate-100 bg-slate-50">
+                            <h4 className="font-bold text-slate-700">{example.title}</h4>
+                            {example.description && <p className="text-sm text-slate-500 mt-1">{example.description}</p>}
+                        </div>
+                        <div className="p-8 flex justify-center items-center bg-[#f8fafc] border-b border-slate-100 min-h-[160px] overflow-x-auto">
+                            {example.preview}
+                        </div>
+                        <div className="bg-[#1e1e1e]">
+                            <CodeBlock code={example.code} />
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     );
@@ -1063,6 +1035,7 @@ const Section = ({ title, subtitle, children }: SectionProps) => (
 // --- MAIN PAGE LAYOUT ---
 const EkontyDesignSystem = () => {
     const [activeTab, setActiveTab] = useState('Foundation');
+    const [activeComponentDetail, setActiveComponentDetail] = useState<string | null>(null);
     const [codeModalData, setCodeModalData] = useState<{ title: string, code: string } | null>(null);
 
     const showCode = (title: string, code: string) => {
@@ -1094,10 +1067,10 @@ const EkontyDesignSystem = () => {
                     {navigation.map((item) => (
                         <button
                             key={item.name}
-                            onClick={() => setActiveTab(item.name)}
+                            onClick={() => { setActiveTab(item.name); setActiveComponentDetail(null); }}
                             className={`w-full text-left px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 flex items-center gap-3
                 ${activeTab === item.name ? 'bg-brand text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}
-              `}
+`}
                         >
                             <HugeiconsIcon icon={item.icon} size={18} />
                             {item.name}
@@ -1175,192 +1148,494 @@ const EkontyDesignSystem = () => {
                         <Section
                             title="Color Architecture"
                             subtitle="Our palette is designed to maintain brand recognition while providing functional visual cues for success, errors, and warnings.">
-                            <ColorPalette onShowCode={showCode} />
-                        </Section>
+                            {activeComponentDetail && activeComponentDetail.startsWith('colors-') ? (
+                                <ComponentDetailView
+                                    title={activeComponentDetail === 'colors-brand' ? 'Brand Palette' : activeComponentDetail === 'colors-semantic' ? 'Semantic Colors' : 'Neutral Palette'}
+                                    onBack={() => setActiveComponentDetail(null)}
+                                    examples={
+                                        activeComponentDetail === 'colors-brand' ? [
+                                            { title: 'Ekonty Brand', preview: <div className="w-24 h-24 rounded-xl shadow-sm" style={{ backgroundColor: '#0b8260' }}></div>, code: `// Token: brand\n// Hex: #0b8260\n// Usage: Primary Brand Color\n\n<div className="bg-[#0b8260]"></div>` },
+                                            { title: 'Brand Surface', preview: <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-100" style={{ backgroundColor: '#e6f4f2' }}></div>, code: `// Token: surface\n// Hex: #e6f4f2\n// Usage: Secondary / Surface Color\n\n<div className="bg-[#e6f4f2]"></div>` }
+                                        ] : activeComponentDetail === 'colors-semantic' ? [
+                                            { title: 'Success', preview: <div className="w-24 h-24 rounded-xl bg-success"></div>, code: `// Token: success\n// Hex: #10B981\n// Usage: Confirmation messages, success states\n\n<div className="bg-success"></div>` },
+                                            { title: 'Warning', preview: <div className="w-24 h-24 rounded-xl bg-warning"></div>, code: `// Token: warning\n// Hex: #F59E0B\n// Usage: Alerts, attention needed\n\n<div className="bg-warning"></div>` },
+                                            { title: 'Danger', preview: <div className="w-24 h-24 rounded-xl bg-danger"></div>, code: `// Token: danger\n// Hex: #EF4444\n// Usage: Errors, destructive actions\n\n<div className="bg-danger"></div>` },
+                                            { title: 'Info', preview: <div className="w-24 h-24 rounded-xl bg-info"></div>, code: `// Token: info\n// Hex: #3B82F6\n// Usage: Informational messages\n\n<div className="bg-info"></div>` }
+                                        ] : colors.neutrals.map(shade => ({
+                                            title: `Slate ${shade.label}`,
+                                            preview: <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-200" style={{ backgroundColor: shade.hex }}></div>,
+                                            code: `// Token: slate-${shade.label}\n// Hex: ${shade.hex}\n\n<div className="bg-slate-${shade.label}"></div>`
+                                        }))
+                                    }
+                                />
+                            ) : (
+                                <ColorPalette onViewDetail={setActiveComponentDetail} />
+                            )}
+                        </Section >
                     )}
 
-                    {activeTab === 'Typography' && (
-                        <Section
-                            title="Typography Scale"
-                            subtitle="We use Outfit for a modern, confident heading style and Plus Jakarta Sans for an incredibly readable body text.">
-                            <TypographyScale onShowCode={showCode} />
-                        </Section>
-                    )}
+                    {
+                        activeTab === 'Typography' && (
+                            <Section
+                                title="Typography Scale"
+                                subtitle="We use Outfit for a modern, confident heading style and Plus Jakarta Sans for an incredibly readable body text.">
+                                {activeComponentDetail === 'typography' ? (
+                                    <ComponentDetailView
+                                        title="Typography Scale"
+                                        onBack={() => setActiveComponentDetail(null)}
+                                        examples={[
+                                            {
+                                                title: "Display",
+                                                preview: <span className="text-[48px] font-bold leading-tight font-heading">The quick brown fox</span>,
+                                                code: `// Font: Inter (Bold 700)\n// Size: 48px\n\n<h1 className="text-[48px] font-bold leading-tight font-heading">The quick brown fox</h1>`
+                                            },
+                                            {
+                                                title: "Heading 1",
+                                                preview: <span className="text-[36px] font-bold leading-tight font-heading">The quick brown fox</span>,
+                                                code: `// Font: Inter (Bold 700)\n// Size: 36px\n\n<h2 className="text-[36px] font-bold leading-tight font-heading">The quick brown fox</h2>`
+                                            },
+                                            {
+                                                title: "Heading 2",
+                                                preview: <span className="text-[30px] font-semibold leading-snug font-heading">The quick brown fox</span>,
+                                                code: `// Font: Inter (SemiBold 600)\n// Size: 30px\n\n<h3 className="text-[30px] font-semibold leading-snug font-heading">The quick brown fox</h3>`
+                                            },
+                                            {
+                                                title: "Body Text",
+                                                preview: <span className="text-[16px] font-normal leading-relaxed font-body">The quick brown fox jumps over the lazy dog.</span>,
+                                                code: `// Font: Roboto (Regular 400)\n// Size: 16px\n\n<p className="text-[16px] font-normal leading-relaxed font-body">The quick brown fox jumps over the lazy dog.</p>`
+                                            },
+                                            {
+                                                title: "Caption",
+                                                preview: <span className="text-[12px] font-medium leading-none font-body uppercase tracking-wider">The quick brown fox</span>,
+                                                code: `// Font: Roboto (Medium 500)\n// Size: 12px\n\n<span className="text-[12px] font-medium leading-none font-body uppercase tracking-wider">The quick brown fox</span>`
+                                            }
+                                        ]}
+                                    />
+                                ) : (
+                                    <TypographyScale onViewDetail={setActiveComponentDetail} />
+                                )}
+                            </Section>
+                        )
+                    }
 
-                    {activeTab === 'Layout' && (
-                        <Section
-                            title="Grid & Layout"
-                            subtitle="Everything is built on a 4px grid. This ensures perfect alignment and consistent spacing across all touchpoints.">
-                            <GridLayoutSystem onShowCode={showCode} />
-                        </Section>
-                    )}
+                    {
+                        activeTab === 'Layout' && (
+                            <Section
+                                title="Grid & Layout"
+                                subtitle="Everything is built on a 4px grid. This ensures perfect alignment and consistent spacing across all touchpoints.">
+                                <GridLayoutSystem onShowCode={showCode} />
+                            </Section>
+                        )
+                    }
 
-                    {activeTab === 'Components' && (
-                        <Section
-                            title="Component Library"
-                            subtitle="A collection of atomic elements used to build complex interfaces. Every component is designed with interactive states.">
-                            <div className="space-y-12">
-                                <div className="space-y-6">
-                                    <h3 className="text-xl font-semibold font-heading">Buttons</h3>
-                                    <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm relative group">
-                                        <button
-                                            onClick={() => showCode('Buttons', `import React from 'react';\nimport { Button } from './EkontyDesignSystem';\nimport { Notification01Icon as Bell, PlusSignIcon as Plus } from '@hugeicons/core-free-icons';\n\nexport default function ButtonExample() {\n  return (\n    <div className="flex flex-wrap gap-4 items-center">\n      <Button variant="primary">Primary Button</Button>\n      <Button variant="secondary">Secondary</Button>\n      <Button variant="outline">Outline</Button>\n      <Button variant="ghost">Ghost Button</Button>\n      <Button variant="icon" icon={Bell} />\n      \n      <Button variant="primary" isLoading>Processing</Button>\n      <Button variant="primary" disabled>Disabled State</Button>\n      <Button variant="primary" icon={Plus}>With Icon</Button>\n    </div>\n  );\n}`)}
-                                            className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold text-brand hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200"
-                                        >
-                                            <HugeiconsIcon icon={Copy} size={12} />
-                                            View Code
-                                        </button>
-                                        <div className="flex flex-wrap gap-4 items-center">
-                                            <Button variant="primary">Primary Button</Button>
-                                            <Button variant="secondary">Secondary</Button>
-                                            <Button variant="outline">Outline</Button>
-                                            <Button variant="ghost">Ghost Button</Button>
-                                            <Button variant="icon" icon={Bell} />
-                                        </div>
-                                        <div className="mt-8 flex flex-wrap gap-4 items-center">
-                                            <Button variant="primary" isLoading>Processing</Button>
-                                            <Button variant="primary" disabled>Disabled State</Button>
-                                            <Button variant="primary" icon={Plus}>With Icon</Button>
-                                        </div>
-                                    </div>
-                                </div>
+                    {
+                        activeTab === 'Components' && (
+                            <Section
+                                title="Component Library"
+                                subtitle="A collection of atomic elements used to build complex interfaces. Every component is designed with interactive states.">
+                                <div className="space-y-12">
+                                    {activeComponentDetail ? (
+                                        <>
+                                            {activeComponentDetail === 'buttons' && (
+                                                <ComponentDetailView
+                                                    title="Buttons"
+                                                    onBack={() => setActiveComponentDetail(null)}
+                                                    examples={[
+                                                        {
+                                                            title: "Primary Button",
+                                                            preview: <Button variant="primary">Primary Action</Button>,
+                                                            code: `import { Button } from './EkontyDesignSystem';\n\n<Button variant="primary">Primary Action</Button>`
+                                                        },
+                                                        {
+                                                            title: "Secondary Button",
+                                                            preview: <Button variant="secondary">Secondary Action</Button>,
+                                                            code: `import { Button } from './EkontyDesignSystem';\n\n<Button variant="secondary">Secondary Action</Button>`
+                                                        },
+                                                        {
+                                                            title: "Outline Button",
+                                                            preview: <Button variant="outline">Outline Action</Button>,
+                                                            code: `import { Button } from './EkontyDesignSystem';\n\n<Button variant="outline">Outline Action</Button>`
+                                                        },
+                                                        {
+                                                            title: "Ghost Button",
+                                                            preview: <Button variant="ghost">Ghost Action</Button>,
+                                                            code: `import { Button } from './EkontyDesignSystem';\n\n<Button variant="ghost">Ghost Action</Button>`
+                                                        },
+                                                        {
+                                                            title: "Icon Button",
+                                                            preview: <Button variant="icon" icon={Bell} />,
+                                                            code: `import { Button } from './EkontyDesignSystem';\nimport { Notification01Icon as Bell } from '@hugeicons/core-free-icons';\n\n<Button variant="icon" icon={Bell} />`
+                                                        },
+                                                        {
+                                                            title: "Loading State",
+                                                            preview: <Button variant="primary" isLoading>Processing</Button>,
+                                                            code: `import { Button } from './EkontyDesignSystem';\n\n<Button variant="primary" isLoading>Processing</Button>`
+                                                        },
+                                                        {
+                                                            title: "With Icon",
+                                                            preview: <Button variant="primary" icon={Plus}>Add New</Button>,
+                                                            code: `import { Button } from './EkontyDesignSystem';\nimport { PlusSignIcon as Plus } from '@hugeicons/core-free-icons';\n\n<Button variant="primary" icon={Plus}>Add New</Button>`
+                                                        }
+                                                    ]}
+                                                />
+                                            )}
 
-                                <div className="space-y-6">
-                                    <h3 className="text-xl font-semibold font-heading">Form Inputs</h3>
-                                    <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm max-w-lg space-y-6 relative group">
-                                        <button
-                                            onClick={() => showCode('Form Inputs', `import React from 'react';\nimport { Input } from './EkontyDesignSystem';\nimport { Mail01Icon as Mail, AccessIcon as Lock, UserIcon as User } from '@hugeicons/core-free-icons';\n\nexport default function InputExample() {\n  return (\n    <div className="space-y-6 max-w-lg">\n      <Input \n        label="Email Address" \n        placeholder="e.g. john@example.com" \n        icon={Mail} \n      />\n      <Input \n        label="Password" \n        type="password" \n        placeholder="Enter your password" \n        icon={Lock} \n      />\n      <Input \n        label="Username" \n        placeholder="ekonty_user" \n        icon={User} \n        error="This username is already taken." \n      />\n    </div>\n  );\n}`)}
-                                            className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold text-brand hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 z-10"
-                                        >
-                                            <HugeiconsIcon icon={Copy} size={12} />
-                                            View Code
-                                        </button>
-                                        <Input label="Email Address" placeholder="e.g. john@example.com" icon={Mail} />
-                                        <Input label="Password" type="password" placeholder="Enter your password" icon={Lock} />
-                                        <Input label="Username" placeholder="ekonty_user" icon={User} error="This username is already taken." />
-                                    </div>
-                                </div>
+                                            {activeComponentDetail === 'inputs' && (
+                                                <ComponentDetailView
+                                                    title="Form Inputs"
+                                                    onBack={() => setActiveComponentDetail(null)}
+                                                    examples={[
+                                                        {
+                                                            title: "Standard Input",
+                                                            preview: <div className="w-full max-w-sm"><Input label="Email Address" placeholder="name@example.com" icon={Mail} /></div>,
+                                                            code: `import { Input } from './EkontyDesignSystem';\nimport { Mail01Icon as Mail } from '@hugeicons/core-free-icons';\n\n<Input \n    label="Email Address" \n    placeholder="name@example.com" \n    icon={Mail} \n/>`
+                                                        },
+                                                        {
+                                                            title: "Password Input",
+                                                            preview: <div className="w-full max-w-sm"><Input label="Password" type="password" placeholder="Enter password" icon={Lock} /></div>,
+                                                            code: `import { Input } from './EkontyDesignSystem';\nimport { AccessIcon as Lock } from '@hugeicons/core-free-icons';\n\n<Input \n    label="Password" \n    type="password" \n    placeholder="Enter password" \n    icon={Lock} \n/>`
+                                                        },
+                                                        {
+                                                            title: "Error State",
+                                                            preview: <div className="w-full max-w-sm"><Input label="Username" placeholder="ekonty_user" error="Username is already taken" icon={User} /></div>,
+                                                            code: `import { Input } from './EkontyDesignSystem';\nimport { UserIcon as User } from '@hugeicons/core-free-icons';\n\n<Input \n    label="Username" \n    placeholder="ekonty_user" \n    error="Username is already taken" \n    icon={User} \n/>`
+                                                        }
+                                                    ]}
+                                                />
+                                            )}
 
-                                <div className="space-y-6">
-                                    <h3 className="text-xl font-semibold font-heading">Search & Specialized Inputs</h3>
-                                    <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm max-w-lg space-y-6 relative group">
-                                        <button
-                                            onClick={() => showCode('Complex Inputs', `import React from 'react';\nimport { Input, Select, Textarea, Checkbox } from './EkontyDesignSystem';\nimport { Search01Icon as Search } from '@hugeicons/core-free-icons';\n\nexport default function ComplexFormExample() {\n  return (\n    <div className="space-y-6 max-w-lg">\n      <Input \n        label="Marketplace Search" \n        placeholder="Search for items, brands, or shops..." \n        icon={Search} \n      />\n      \n      <Select label="Account Type">\n        <option value="">Select your account type</option>\n        <option value="seller">Verified Seller</option>\n        <option value="buyer">Individual Buyer</option>\n        <option value="business">Enterprise Business</option>\n      </Select>\n      \n      <Textarea \n        label="Order Description" \n        placeholder="Briefly describe your requirements..." \n      />\n      \n      <div className="pt-2 flex flex-col gap-4">\n        <Checkbox label="I agree to the Terms of Service" defaultChecked />\n        <Checkbox label="Subscribe to marketplace updates" />\n      </div>\n    </div>\n  );\n}`)}
-                                            className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold text-brand hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 z-10"
-                                        >
-                                            <HugeiconsIcon icon={Copy} size={12} />
-                                            View Code
-                                        </button>
-                                        <Input label="Marketplace Search" placeholder="Search for items, brands, or shops..." icon={Search} />
-                                        <Select label="Account Type">
-                                            <option value="">Select your account type</option>
-                                            <option value="seller">Verified Seller</option>
-                                            <option value="buyer">Individual Buyer</option>
-                                            <option value="business">Enterprise Business</option>
-                                        </Select>
-                                        <Textarea label="Order Description" placeholder="Briefly describe your requirements..." />
-                                        <div className="pt-2 flex flex-col gap-4">
-                                            <Checkbox label="I agree to the Terms of Service" defaultChecked />
-                                            <Checkbox label="Subscribe to marketplace updates" />
-                                        </div>
-                                    </div>
-                                </div>
+                                            {activeComponentDetail === 'complex' && (
+                                                <ComponentDetailView
+                                                    title="Search & Specialized Inputs"
+                                                    onBack={() => setActiveComponentDetail(null)}
+                                                    examples={[
+                                                        {
+                                                            title: "Search Input",
+                                                            preview: <div className="w-full max-w-sm"><Input label="Search" placeholder="Search marketplace..." icon={Search} /></div>,
+                                                            code: `import { Input } from './EkontyDesignSystem';\nimport { Search01Icon as Search } from '@hugeicons/core-free-icons';\n\n<Input \n    label="Search" \n    placeholder="Search marketplace..." \n    icon={Search} \n/>`
+                                                        },
+                                                        {
+                                                            title: "Select Dropdown",
+                                                            preview: <div className="w-full max-w-sm"><Select label="Category"><option>Electronics</option><option>Fashion</option></Select></div>,
+                                                            code: `import { Select } from './EkontyDesignSystem';\n\n<Select label="Category">\n    <option>Electronics</option>\n    <option>Fashion</option>\n</Select>`
+                                                        },
+                                                        {
+                                                            title: "Textarea",
+                                                            preview: <div className="w-full max-w-sm"><Textarea label="Bio" placeholder="Tell us about yourself..." /></div>,
+                                                            code: `import { Textarea } from './EkontyDesignSystem';\n\n<Textarea \n    label="Bio" \n    placeholder="Tell us about yourself..." \n/>`
+                                                        },
+                                                        {
+                                                            title: "Checkboxes",
+                                                            preview: <div className="flex flex-col gap-4"><Checkbox label="Option 1" defaultChecked /><Checkbox label="Option 2" /></div>,
+                                                            code: `import { Checkbox } from './EkontyDesignSystem';\n\n<Checkbox label="Option 1" defaultChecked />\n<Checkbox label="Option 2" />`
+                                                        }
+                                                    ]}
+                                                />
+                                            )}
 
-                                <div className="space-y-6">
-                                    <h3 className="text-xl font-semibold font-heading">Feedback & Alerts</h3>
-                                    <div className="space-y-4 relative group">
-                                        <button
-                                            onClick={() => showCode('Alerts', `import React from 'react';\nimport { Alert } from './EkontyDesignSystem';\n\nexport default function AlertExample() {\n  return (\n    <div className="space-y-4">\n      <Alert variant="success" title="Payment Successful" onClose={() => {}}>\n        Your transaction has been processed successfully. A receipt has been sent to your email.\n      </Alert>\n      \n      <Alert variant="warning" title="Incomplete Profile">\n        Please complete your profile details to unlock all marketplace features.\n      </Alert>\n      \n      <Alert variant="danger" title="System Error">\n        We were unable to connect to the server. Please check your internet connection.\n      </Alert>\n    </div>\n  );\n}`)}
-                                            className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold text-brand hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 z-10"
-                                        >
-                                            <HugeiconsIcon icon={Copy} size={12} />
-                                            View Code
-                                        </button>
-                                        <Alert variant="success" title="Payment Successful" onClose={() => { }}>
-                                            Your transaction has been processed successfully. A receipt has been sent to your email.
-                                        </Alert>
-                                        <Alert variant="warning" title="Incomplete Profile">
-                                            Please complete your profile details to unlock all marketplace features.
-                                        </Alert>
-                                        <Alert variant="danger" title="System Error">
-                                            We were unable to connect to the server. Please check your internet connection.
-                                        </Alert>
-                                    </div>
-                                </div>
-                            </div>
-                        </Section>
-                    )}
-
-                    {activeTab === 'Assets' && (
-                        <Section
-                            title="Iconography & Imagery"
-                            subtitle="We use Hugeicons for a clean, consistent stroke style. Standardized sizes ensure visual balance across the UI.">
-                            <div className="space-y-12">
-                                <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm">
-                                    <div className="grid grid-cols-4 md:grid-cols-8 gap-8">
-                                        {[
-                                            { icon: Search, name: 'Search01Icon' },
-                                            { icon: Send, name: 'SentIcon' },
-                                            { icon: Settings, name: 'Settings01Icon' },
-                                            { icon: Bell, name: 'Notification01Icon' },
-                                            { icon: CheckCircle, name: 'CheckmarkCircle01Icon' },
-                                            { icon: AlertTriangle, name: 'Alert01Icon' },
-                                            { icon: XOctagon, name: 'Cancel01Icon' },
-                                            { icon: Info, name: 'InformationCircleIcon' },
-                                            { icon: Eye, name: 'ViewIcon' },
-                                            { icon: Plus, name: 'PlusSignIcon' },
-                                            { icon: Trash2, name: 'Delete02Icon' },
-                                            { icon: MoreVertical, name: 'MoreVerticalIcon' },
-                                            { icon: ArrowRight, name: 'ArrowRight02Icon' },
-                                            { icon: ChevronRight, name: 'ArrowRight01Icon' },
-                                            { icon: X, name: 'Cancel01Icon' },
-                                            { icon: Loader2, name: 'Loading03Icon' }
-                                        ].map(({ icon: Icon, name }, idx) => (
-                                            <div key={idx} onClick={() => showCode('Icon Usage', `import { ${name} } from '@hugeicons/core-free-icons';\n\n<HugeiconsIcon icon={${name}} size={24} />`)} className="flex flex-col items-center gap-2 cursor-pointer group">
-                                                <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center text-slate-600 group-hover:text-brand group-hover:scale-110 transition-all">
-                                                    <HugeiconsIcon icon={Icon} size={24} />
+                                            {activeComponentDetail === 'alerts' && (
+                                                <ComponentDetailView
+                                                    title="Feedback & Alerts"
+                                                    onBack={() => setActiveComponentDetail(null)}
+                                                    examples={[
+                                                        {
+                                                            title: "Info Alert",
+                                                            preview: <div className="w-full max-w-lg"><Alert variant="info" title="Update Available">A new software update is available.</Alert></div>,
+                                                            code: `import { Alert } from './EkontyDesignSystem';\n\n<Alert variant="info" title="Update Available">\n    A new software update is available.\n</Alert>`
+                                                        },
+                                                        {
+                                                            title: "Success Alert",
+                                                            preview: <div className="w-full max-w-lg"><Alert variant="success" title="Success">Operation completed successfully.</Alert></div>,
+                                                            code: `import { Alert } from './EkontyDesignSystem';\n\n<Alert variant="success" title="Success">\n    Operation completed successfully.\n</Alert>`
+                                                        },
+                                                        {
+                                                            title: "Warning Alert",
+                                                            preview: <div className="w-full max-w-lg"><Alert variant="warning" title="Warning">Please check your internet connection.</Alert></div>,
+                                                            code: `import { Alert } from './EkontyDesignSystem';\n\n<Alert variant="warning" title="Warning">\n    Please check your internet connection.\n</Alert>`
+                                                        },
+                                                        {
+                                                            title: "Danger Alert",
+                                                            preview: <div className="w-full max-w-lg"><Alert variant="danger" title="Error">Something went wrong.</Alert></div>,
+                                                            code: `import { Alert } from './EkontyDesignSystem';\n\n<Alert variant="danger" title="Error">\n    Something went wrong.\n</Alert>`
+                                                        }
+                                                    ]}
+                                                />
+                                            )}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="space-y-6">
+                                                <h3 className="text-xl font-semibold font-heading">Buttons</h3>
+                                                <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm relative group">
+                                                    <button
+                                                        onClick={() => setActiveComponentDetail('buttons')}
+                                                        className="absolute top-4 right-4 text-xs font-bold text-brand hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200"
+                                                    >
+                                                        <HugeiconsIcon icon={Code} size={12} />
+                                                        View Code
+                                                    </button>
+                                                    <div className="flex flex-wrap gap-4 items-center">
+                                                        <Button variant="primary">Primary Button</Button>
+                                                        <Button variant="secondary">Secondary</Button>
+                                                        <Button variant="outline">Outline</Button>
+                                                        <Button variant="ghost">Ghost Button</Button>
+                                                        <Button variant="icon" icon={Bell} />
+                                                    </div>
+                                                    <div className="mt-8 flex flex-wrap gap-4 items-center">
+                                                        <Button variant="primary" isLoading>Processing</Button>
+                                                        <Button variant="primary" disabled>Disabled State</Button>
+                                                        <Button variant="primary" icon={Plus}>With Icon</Button>
+                                                    </div>
                                                 </div>
-                                                <span className="text-[10px] font-bold text-slate-400 group-hover:text-brand transition-colors">24px</span>
                                             </div>
-                                        ))}
-                                    </div>
+
+                                            <div className="space-y-6">
+                                                <h3 className="text-xl font-semibold font-heading">Form Inputs</h3>
+                                                <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm max-w-lg space-y-6 relative group">
+                                                    <button
+                                                        onClick={() => setActiveComponentDetail('inputs')}
+                                                        className="absolute top-4 right-4 text-xs font-bold text-brand hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 z-10"
+                                                    >
+                                                        <HugeiconsIcon icon={Code} size={12} />
+                                                        View Code
+                                                    </button>
+                                                    <Input label="Email Address" placeholder="e.g. john@example.com" icon={Mail} />
+                                                    <Input label="Password" type="password" placeholder="Enter your password" icon={Lock} />
+                                                    <Input label="Username" placeholder="ekonty_user" icon={User} error="This username is already taken." />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-6">
+                                                <h3 className="text-xl font-semibold font-heading">Search & Specialized Inputs</h3>
+                                                <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm max-w-lg space-y-6 relative group">
+                                                    <button
+                                                        onClick={() => setActiveComponentDetail('complex')}
+                                                        className="absolute top-4 right-4 text-xs font-bold text-brand hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 z-10"
+                                                    >
+                                                        <HugeiconsIcon icon={Code} size={12} />
+                                                        View Code
+                                                    </button>
+                                                    <Input label="Marketplace Search" placeholder="Search for items, brands, or shops..." icon={Search} />
+                                                    <Select label="Account Type">
+                                                        <option value="">Select your account type</option>
+                                                        <option value="seller">Verified Seller</option>
+                                                        <option value="buyer">Individual Buyer</option>
+                                                        <option value="business">Enterprise Business</option>
+                                                    </Select>
+                                                    <Textarea label="Order Description" placeholder="Briefly describe your requirements..." />
+                                                    <div className="pt-2 flex flex-col gap-4">
+                                                        <Checkbox label="I agree to the Terms of Service" defaultChecked />
+                                                        <Checkbox label="Subscribe to marketplace updates" />
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-6">
+                                                <h3 className="text-xl font-semibold font-heading">Feedback & Alerts</h3>
+                                                <div className="space-y-4 relative group">
+                                                    <button
+                                                        onClick={() => setActiveComponentDetail('alerts')}
+                                                        className="absolute top-4 right-4 text-xs font-bold text-brand hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 z-10"
+                                                    >
+                                                        <HugeiconsIcon icon={Code} size={12} />
+                                                        View Code
+                                                    </button>
+                                                    <Alert variant="success" title="Payment Successful" onClose={() => { }}>
+                                                        Your transaction has been processed successfully. A receipt has been sent to your email.
+                                                    </Alert>
+                                                    <Alert variant="warning" title="Incomplete Profile">
+                                                        Please complete your profile details to unlock all marketplace features.
+                                                    </Alert>
+                                                    <Alert variant="danger" title="System Error">
+                                                        We were unable to connect to the server. Please check your internet connection.
+                                                    </Alert>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
+                            </Section>
+                        )
+                    }
 
-                                <div className="space-y-6">
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="text-xl font-semibold font-heading">Media Placeholder</h3>
-                                        <button onClick={() => showCode('Media Placeholder', `<MediaPlaceholder title="Marketplace Listing Image" />\n\n// Component Definition:\nconst MediaPlaceholder = ({ title = "Media Preview" }) => (\n    <div className="aspect-[3/4] w-full max-w-[280px] rounded-2xl bg-slate-100 border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">\n        <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-colors duration-300"></div>\n        <div className="p-2 bg-white rounded-full shadow-sm mb-3">\n            <HugeiconsIcon icon={Plus} size={16} className="text-slate-400" />\n        </div>\n        <span className="text-sm font-bold opacity-70 uppercase tracking-widest">{title}</span>\n        <span className="text-[10px] mt-1">3:4 Aspect Ratio</span>\n    </div>\n);`)} className="text-xs font-bold text-brand hover:underline">View Code</button>
-                                    </div>
-                                    <div
-                                        className="max-w-xl cursor-pointer"
-                                        onClick={() => showCode('Media Placeholder', `<MediaPlaceholder title="Marketplace Listing Image" />\n\n// Component Definition:\nconst MediaPlaceholder = ({ title = "Media Preview" }) => (\n    <div className="aspect-[3/4] w-full max-w-[280px] rounded-2xl bg-slate-100 border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">\n        <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-colors duration-300"></div>\n        <div className="p-2 bg-white rounded-full shadow-sm mb-3">\n            <HugeiconsIcon icon={Plus} size={16} className="text-slate-400" />\n        </div>\n        <span className="text-sm font-bold opacity-70 uppercase tracking-widest">{title}</span>\n        <span className="text-[10px] mt-1">3:4 Aspect Ratio</span>\n    </div>\n);`)}
-                                    >
-                                        <MediaPlaceholder title="Marketplace Listing Image" />
-                                    </div>
+                    {
+                        activeTab === 'Assets' && (
+                            <Section
+                                title="Iconography & Imagery"
+                                subtitle="We use Hugeicons for a clean, consistent stroke style. Standardized sizes ensure visual balance across the UI.">
+                                <div className="space-y-12">
+                                    {activeComponentDetail === 'assets-icons' ? (
+                                        <ComponentDetailView
+                                            title="Iconography Usage"
+                                            onBack={() => setActiveComponentDetail(null)}
+                                            examples={[
+                                                {
+                                                    title: "System Icons",
+                                                    preview: <div className="grid grid-cols-4 md:grid-cols-8 gap-4">
+                                                        {[
+                                                            { icon: Search, name: 'Search01Icon' },
+                                                            { icon: Send, name: 'SentIcon' },
+                                                            { icon: Settings, name: 'Settings01Icon' },
+                                                            { icon: Bell, name: 'Notification01Icon' },
+                                                            { icon: CheckCircle, name: 'CheckmarkCircle01Icon' },
+                                                            { icon: AlertTriangle, name: 'Alert01Icon' },
+                                                            { icon: XOctagon, name: 'Cancel01Icon' },
+                                                            { icon: Info, name: 'InformationCircleIcon' },
+                                                            { icon: Eye, name: 'ViewIcon' },
+                                                            { icon: Plus, name: 'PlusSignIcon' },
+                                                            { icon: Trash2, name: 'Delete02Icon' },
+                                                            { icon: MoreVertical, name: 'MoreVerticalIcon' },
+                                                            { icon: ArrowRight, name: 'ArrowRight02Icon' },
+                                                            { icon: ChevronRight, name: 'ArrowRight01Icon' },
+                                                            { icon: X, name: 'Cancel01Icon' },
+                                                            { icon: Loader2, name: 'Loading03Icon' }
+                                                        ].map(({ icon: Icon }, idx) => (
+                                                            <div key={idx} className="flex flex-col items-center gap-2 p-3 border border-slate-100 rounded-xl bg-slate-50">
+                                                                <HugeiconsIcon icon={Icon} size={24} className="text-slate-600" />
+                                                            </div>
+                                                        ))}
+                                                    </div>,
+                                                    code: `import { \n    Search01Icon, SentIcon, Settings01Icon, Notification01Icon, \n    CheckmarkCircle01Icon, Alert01Icon, Cancel01Icon, InformationCircleIcon, \n    ViewIcon, PlusSignIcon, Delete02Icon, MoreVerticalIcon, \n    ArrowRight02Icon, ArrowRight01Icon, Loading03Icon \n} from '@hugeicons/core-free-icons';\n\n// Usage Examples\n<HugeiconsIcon icon={Search01Icon} size={24} />\n<HugeiconsIcon icon={SentIcon} size={24} />\n<HugeiconsIcon icon={Settings01Icon} size={24} />\n<HugeiconsIcon icon={Notification01Icon} size={24} />\n<HugeiconsIcon icon={CheckmarkCircle01Icon} size={24} />\n<HugeiconsIcon icon={Alert01Icon} size={24} />\n<HugeiconsIcon icon={Cancel01Icon} size={24} />\n<HugeiconsIcon icon={InformationCircleIcon} size={24} />\n<HugeiconsIcon icon={ViewIcon} size={24} />\n<HugeiconsIcon icon={PlusSignIcon} size={24} />\n<HugeiconsIcon icon={Delete02Icon} size={24} />\n<HugeiconsIcon icon={MoreVerticalIcon} size={24} />\n<HugeiconsIcon icon={ArrowRight02Icon} size={24} />\n<HugeiconsIcon icon={ArrowRight01Icon} size={24} />\n<HugeiconsIcon icon={Cancel01Icon} size={24} />\n<HugeiconsIcon icon={Loading03Icon} size={24} />`
+                                                },
+                                                {
+                                                    title: "Media Placeholder",
+                                                    preview: <MediaPlaceholder title="Preview" />,
+                                                    code: `const MediaPlaceholder = ({ title = "Media Preview" }) => (\n    <div className="aspect-[3/4] w-full max-w-[280px] rounded-2xl bg-slate-100 border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">\n        {/* ...implementation details... */}\n        <span className="text-sm font-bold opacity-70 uppercase tracking-widest">{title}</span>\n    </div>\n);`
+                                                }
+                                            ]}
+                                        />
+                                    ) : (
+                                        <>
+                                            <div className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm relative">
+                                                <div className="absolute top-4 right-4">
+                                                    <button onClick={() => setActiveComponentDetail('assets-icons')} className="text-xs font-bold text-brand hover:underline flex items-center gap-1">
+                                                        <HugeiconsIcon icon={Code} size={14} />
+                                                        View Code
+                                                    </button>
+                                                </div>
+                                                <div className="grid grid-cols-4 md:grid-cols-8 gap-8 mt-4">
+
+                                                    {[
+                                                        { icon: Search, name: 'Search01Icon' },
+                                                        { icon: Send, name: 'SentIcon' },
+                                                        { icon: Settings, name: 'Settings01Icon' },
+                                                        { icon: Bell, name: 'Notification01Icon' },
+                                                        { icon: CheckCircle, name: 'CheckmarkCircle01Icon' },
+                                                        { icon: AlertTriangle, name: 'Alert01Icon' },
+                                                        { icon: XOctagon, name: 'Cancel01Icon' },
+                                                        { icon: Info, name: 'InformationCircleIcon' },
+                                                        { icon: Eye, name: 'ViewIcon' },
+                                                        { icon: Plus, name: 'PlusSignIcon' },
+                                                        { icon: Trash2, name: 'Delete02Icon' },
+                                                        { icon: MoreVertical, name: 'MoreVerticalIcon' },
+                                                        { icon: ArrowRight, name: 'ArrowRight02Icon' },
+                                                        { icon: ChevronRight, name: 'ArrowRight01Icon' },
+                                                        { icon: X, name: 'Cancel01Icon' },
+                                                        { icon: Loader2, name: 'Loading03Icon' }
+                                                    ].map(({ icon: Icon }, idx) => (
+                                                        <div key={idx} className="flex flex-col items-center gap-2 group cursor-default">
+                                                            <div className="w-12 h-12 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center text-slate-600 group-hover:text-brand group-hover:scale-110 transition-all">
+                                                                <HugeiconsIcon icon={Icon} size={24} />
+                                                            </div>
+                                                            <span className="text-[10px] font-bold text-slate-400 group-hover:text-brand transition-colors">24px</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-6">
+                                                <div className="flex items-center justify-between">
+                                                    <h3 className="text-xl font-semibold font-heading">Media Placeholder</h3>
+                                                </div>
+                                                <div className="max-w-xl">
+                                                    <MediaPlaceholder title="Marketplace Listing Image" />
+                                                </div>
+                                            </div>
+                                        </>
+                                    )
+                                    }
                                 </div>
-                            </div>
-                        </Section>
-                    )}
+                            </Section>
+                        )}
 
-                    {activeTab === 'Cards' && (
-                        <Section
-                            title="Voice & Card Layouts"
-                            subtitle="Our components scale seamlessly across different content types. Here is how we handle text-heavy, media-focused, and profile-based cards.">
-                            <CardShowcase onShowCode={showCode} />
-                        </Section>
-                    )}
+                    {
+                        activeTab === 'Cards' && (
+                            <Section
+                                title="Voice & Card Layouts"
+                                subtitle="Our components scale seamlessly across different content types. Here is how we handle text-heavy, media-focused, and profile-based cards.">
+                                {activeComponentDetail === 'cards' ? (
+                                    <ComponentDetailView
+                                        title="Card Layouts"
+                                        onBack={() => setActiveComponentDetail(null)}
+                                        examples={[
+                                            {
+                                                title: "Text-Only Card",
+                                                preview: <div className="max-w-md w-full bg-slate-50 p-4"><div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between"><div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-4">Product Update</div><h4 className="text-xl font-bold text-slate-900 mb-3 font-heading leading-tight">Empowering Marketplace Operations</h4><button className="text-brand text-sm font-bold inline-flex items-center">Learn more <HugeiconsIcon icon={ArrowRight} size={16} className="ml-1" /></button></div></div>,
+                                                code: `<div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-md transition-all duration-300 group">\n    <div>\n        <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider mb-4">\n            Product Update\n        </div>\n        <h4 className="text-xl font-bold text-slate-900 mb-3 font-heading leading-tight">Empowering Marketplace Operations</h4>\n        {/* ...content... */}\n    </div>\n    <button className="text-brand text-sm font-bold inline-flex items-center group-hover:gap-2 transition-all">\n        Learn more <HugeiconsIcon icon={ArrowRight} size={16} className="ml-1" />\n    </button>\n</div>`
+                                            },
+                                            {
+                                                title: "Image + Text Card",
+                                                preview: <div className="max-w-md w-full bg-slate-50 p-4"><div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"><div className="h-48 w-full overflow-hidden relative bg-slate-200"></div><div className="p-6"><h4 className="text-lg font-bold text-slate-900 mb-2 font-heading">Vibrant Listing Styles</h4><span className="text-brand font-bold text-sm">$299.00</span></div></div></div>,
+                                                code: `<div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-all duration-300">\n    <div className="h-48 w-full overflow-hidden relative">\n        <img src="/images/card-banner.png" className="w-full h-full object-cover" />\n        <div className="absolute top-4 left-4">\n            <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-[10px] font-bold text-slate-800 shadow-sm uppercase tracking-wider">New Arrival</span>\n        </div>\n    </div>\n    <div className="p-6">\n        <h4 className="text-lg font-bold text-slate-900 mb-2 font-heading">Vibrant Listing Styles</h4>\n        {/* ...prices and actions... */}\n    </div>\n</div>`
+                                            },
+                                            {
+                                                title: "Profile Card",
+                                                preview: <div className="max-w-md w-full bg-slate-50 p-4"><div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 group"><div className="flex items-center gap-4 mb-6"><div className="w-16 h-16 rounded-full border-2 border-brand/20 p-1 relative"><div className="w-14 h-14 rounded-full bg-slate-200"></div><div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success border-2 border-white rounded-full"></div></div><div><h4 className="font-bold text-slate-900 text-lg leading-tight">Sarah David</h4><p className="text-slate-500 text-xs font-medium">Verified 4.9 ★★★★★</p></div></div><p className="text-slate-600 text-sm font-body leading-relaxed mb-6 italic">"Ekonty has completely transformed how I manage my boutique operations. The interface is just so intuitive!"</p><div className="flex gap-2"><Button variant="secondary" size="sm" fullWidth>Message</Button><Button variant="primary" size="sm" fullWidth>View Profile</Button></div></div></div>,
+                                                code: `<div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300 group">\n    <div className="flex items-center gap-4 mb-6">\n        <div className="w-16 h-16 rounded-full border-2 border-brand/20 p-1 relative">\n            <img src="/images/card-avatar.png" className="w-14 h-14 rounded-full object-cover" />\n            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-success border-2 border-white rounded-full"></div>\n        </div>\n        {/* ...details... */}\n    </div>\n    <p className="text-slate-600 text-sm font-body leading-relaxed mb-6 italic">\n        "Ekonty has completely transformed how I manage my boutique operations..."\n    </p>\n    <div className="flex gap-2">\n        <Button variant="secondary" size="sm" fullWidth>Message</Button>\n        <Button variant="primary" size="sm" fullWidth>View Profile</Button>\n    </div>\n</div>`
+                                            }
+                                        ]}
+                                    />
+                                ) : (
+                                    <CardShowcase onViewDetail={setActiveComponentDetail} />
+                                )}
+                            </Section>
+                        )
+                    }
 
-                    {activeTab === 'Interactions' && (
-                        <Section
-                            title="Interaction & Motion"
-                            subtitle="Animation should be purposeful and subtle. We use physics-based transitions to make the UI feel reactive and alive.">
-                            <InteractionShowcase onShowCode={showCode} />
-                        </Section>
-                    )}
+                    {
+                        activeTab === 'Interactions' && (
+                            <Section
+                                title="Interaction & Motion"
+                                subtitle="Animation should be purposeful and subtle. We use physics-based transitions to make the UI feel reactive and alive.">
+                                {activeComponentDetail === 'interactions' ? (
+                                    <ComponentDetailView
+                                        title="Interaction Patterns"
+                                        onBack={() => setActiveComponentDetail(null)}
+                                        examples={[
+                                            {
+                                                title: "Hover Effect",
+                                                preview: <div className="w-full max-w-xs h-20 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center cursor-pointer hover:bg-brand hover:text-white hover:scale-105 transition-all duration-300 group"><span className="text-sm font-bold group-hover:translate-x-1 transition-transform">Hover Me</span></div>,
+                                                code: `<div className="h-20 w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center cursor-pointer hover:bg-brand hover:text-white hover:scale-105 transition-all duration-300 group">\n    <span className="text-sm font-bold group-hover:translate-x-1 transition-transform">Hover Me</span>\n</div>`
+                                            },
+                                            {
+                                                title: "Active State (Click)",
+                                                preview: <div className="w-full max-w-xs h-20 rounded-xl flex items-center justify-center cursor-pointer select-none transition-all duration-100 shadow-sm bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95"><span className="text-sm font-bold">Click Me</span></div>,
+                                                code: `<div className="h-20 w-full rounded-xl flex items-center justify-center cursor-pointer select-none transition-all duration-100 shadow-sm bg-slate-100 text-slate-600 hover:bg-slate-200 active:scale-95">\n    <span className="text-sm font-bold">Click Me</span>\n</div>`
+                                            },
+                                            {
+                                                title: "Focus State",
+                                                preview: <div className="w-full max-w-xs"><button className="h-20 w-full bg-white border-2 border-slate-200 rounded-xl flex items-center justify-center outline-none focus-visible:ring-4 focus-visible:ring-brand/20 focus-visible:border-brand transition-all"><span className="text-sm font-bold text-slate-600">Tab to Focus</span></button></div>,
+                                                code: `<button className="h-20 w-full bg-white border-2 border-slate-200 rounded-xl flex items-center justify-center outline-none focus-visible:ring-4 focus-visible:ring-brand/20 focus-visible:border-brand transition-all">\n    <span className="text-sm font-bold text-slate-600">Tab to Focus</span>\n</button>`
+                                            },
+                                            {
+                                                title: "Motion (Scale)",
+                                                preview: <div className="w-full max-w-xs"><div className="h-20 w-full bg-success/10 border border-success/20 rounded-xl flex items-center justify-center group hover:rotate-2 transition-transform duration-300"><HugeiconsIcon icon={CheckCircle} size={32} className="text-success group-hover:scale-125 transition-transform" /></div></div>,
+                                                code: `import { CheckmarkCircle01Icon as CheckCircle } from '@hugeicons/core-free-icons';\n\n<div className="h-20 w-full bg-success/10 border border-success/20 rounded-xl flex items-center justify-center group hover:rotate-2 transition-transform duration-300">\n    <HugeiconsIcon icon={CheckCircle} size={32} className="text-success group-hover:scale-125 transition-transform" />\n</div>`
+                                            }
+                                        ]}
+                                    />
+                                ) : (
+                                    <InteractionShowcase onViewDetail={setActiveComponentDetail} />
+                                )}
+                            </Section>
+                        )
+                    }
 
-                    {activeTab === 'Collaboration' && (
-                        <TeamCollaboration onShowCode={showCode} />
-                    )}
+                    {
+                        activeTab === 'Collaboration' && (
+                            <TeamCollaboration onShowCode={showCode} />
+                        )
+                    }
                 </div>
             </main>
 
@@ -1369,26 +1644,26 @@ const EkontyDesignSystem = () => {
                 {navigation.filter(item => ['Components', 'Colors', 'Foundation', 'Layout'].includes(item.name)).map((item) => (
                     <button
                         key={item.name}
-                        onClick={() => setActiveTab(item.name)}
+                        onClick={() => { setActiveTab(item.name); setActiveComponentDetail(null); }}
                         className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-bold transition-all
-              ${activeTab === item.name ? 'bg-brand text-white shadow-lg' : 'text-slate-500'}
-            `}
+                  ${activeTab === item.name ? 'bg-brand text-white shadow-lg' : 'text-slate-500'}
+                `}
                     >
                         <HugeiconsIcon icon={item.icon} size={18} />
                         {item.name}
                     </button>
                 ))}
                 <button
-                    onClick={() => setActiveTab('Cards')}
+                    onClick={() => { setActiveTab('Cards'); setActiveComponentDetail(null); }}
                     className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-bold transition-all
-            ${['Assets', 'Cards', 'Interactions'].includes(activeTab) ? 'bg-brand text-white shadow-lg' : 'text-slate-500'}
-          `}
+                ${['Assets', 'Cards', 'Interactions', 'Collaboration'].includes(activeTab) ? 'bg-brand text-white shadow-lg' : 'text-slate-500'}
+              `}
                 >
                     <HugeiconsIcon icon={MoreVertical} size={18} />
                     More
                 </button>
             </div>
-        </div >
+        </div>
     );
 };
 
