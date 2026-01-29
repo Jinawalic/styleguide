@@ -29,7 +29,15 @@ import {
     MotionIcon as Motion,
     Mail01Icon as Mail,
     UserIcon as User,
-    AccessIcon as Lock
+    AccessIcon as Lock,
+    CodeIcon as Code,
+    KanbanIcon as Kanban,
+    TextNumberSignIcon as Hash,
+    Comment01Icon as MessageSquare,
+    Attachment01Icon as Attachment,
+    SmileIcon as Smile,
+    MoreHorizontalIcon as MoreHorizontal,
+    UserGroupIcon as Team
 } from '@hugeicons/core-free-icons';
 
 // --- PILLAR 1: COLOR ARCHITECTURE ---
@@ -280,9 +288,13 @@ const typography = [
 
 const TypographyScale = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
     const handleTypoClick = (style: typeof typography[0]) => {
-        const code = `<h1 className="${style.class}">
+        const code = `// Font Family: ${style.family}
+// Font Weight: ${style.weight}
+// Font Size: ${style.size}
+
+<div className="${style.class}">
     The quick brown fox jumps over the lazy dog
-</h1>`;
+</div>`;
         onShowCode(style.name, code);
     };
 
@@ -302,18 +314,30 @@ const TypographyScale = ({ onShowCode }: { onShowCode: (title: string, code: str
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                     {typography.map((style) => (
-                        <tr key={style.name} onClick={() => handleTypoClick(style)} className="hover:bg-slate-50 cursor-pointer transition-colors group">
+                        <tr key={style.name} onClick={() => handleTypoClick(style)} className="hover:bg-slate-50 relative group transition-colors cursor-pointer">
                             <td className="p-4 align-top">
-                                <span className="text-sm font-bold text-slate-700 group-hover:text-brand">{style.name}</span>
+                                <span className="text-sm font-bold text-slate-700 group-hover:text-brand transition-colors">{style.name}</span>
                             </td>
                             <td className="p-4">
                                 <div className={style.class}>The quick brown fox jumps over the lazy dog</div>
                             </td>
-                            <td className="p-4 align-top">
-                                <div className="text-[10px] space-y-1 text-slate-500">
+                            <td className="p-4 align-top relative min-w-[120px]">
+                                <div className="text-[10px] space-y-1 text-slate-500 group-hover:opacity-20 transition-opacity duration-200">
                                     <p><span className="font-bold">Size:</span> {style.size}</p>
                                     <p><span className="font-bold">Weight:</span> {style.weight}</p>
                                     <p><span className="font-bold">Family:</span> {style.family}</p>
+                                </div>
+                                <div className="absolute inset-0 flex items-center justify-end px-4 opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none">
+                                    <button
+                                        className="bg-slate-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold inline-flex items-center gap-2 shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all pointer-events-auto hover:bg-brand"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleTypoClick(style);
+                                        }}
+                                    >
+                                        <HugeiconsIcon icon={Code} size={14} />
+                                        <span>View Code</span>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -737,6 +761,289 @@ import { CheckCircle } from '@hugeicons/react/outline';
     );
 };
 
+// --- PILLAR 8: TEAM COLLABORATION ---
+const KanbanColumn = ({ title, count, children, onAddTask }: { title: string, count: number, children: React.ReactNode, onAddTask: () => void }) => (
+    <div className="flex flex-col h-full min-w-[280px] w-80 bg-slate-50 rounded-2xl p-4 border border-slate-100">
+        <div className="flex items-center justify-between mb-4 px-1">
+            <h4 className="font-bold text-slate-700 text-sm">{title}</h4>
+            <span className="bg-white px-2 py-0.5 rounded-full text-[10px] font-bold text-slate-400 border border-slate-100 shadow-sm">{count}</span>
+        </div>
+        <div className="flex-1 overflow-y-auto space-y-3 pr-1 custom-scrollbar">
+            {children}
+        </div>
+        <button
+            onClick={onAddTask}
+            className="mt-4 w-full py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-brand hover:bg-white rounded-xl transition-all text-sm font-bold border border-transparent hover:border-slate-100 hover:shadow-sm"
+        >
+            <HugeiconsIcon icon={Plus} size={16} />
+            <span>Add Task</span>
+        </button>
+    </div>
+);
+
+const TaskCard = ({ title, priority, assignee, comments, attachments }: { title: string, priority: 'Low' | 'Medium' | 'High', assignee: string, comments: number, attachments: number }) => {
+    const priorityColors = {
+        Low: 'bg-slate-100 text-slate-500',
+        Medium: 'bg-warning/10 text-warning',
+        High: 'bg-danger/10 text-danger'
+    };
+
+    return (
+        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 group animate-in fade-in zoom-in duration-300">
+            <div className="flex justify-between items-start mb-3">
+                <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${priorityColors[priority]}`}>
+                    {priority}
+                </span>
+                <button className="text-slate-300 hover:text-slate-600">
+                    <HugeiconsIcon icon={MoreHorizontal} size={16} />
+                </button>
+            </div>
+            <h5 className="font-bold text-slate-800 text-sm mb-4 leading-snug font-body">{title}</h5>
+            <div className="flex items-center justify-between pt-3 border-t border-slate-50">
+                <div className="flex items-center gap-3">
+                    {comments > 0 && (
+                        <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">
+                            <HugeiconsIcon icon={MessageSquare} size={12} />
+                            <span>{comments}</span>
+                        </div>
+                    )}
+                    {attachments > 0 && (
+                        <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">
+                            <HugeiconsIcon icon={Attachment} size={12} />
+                            <span>{attachments}</span>
+                        </div>
+                    )}
+                </div>
+                <div className="w-6 h-6 rounded-full bg-brand/10 border border-white shadow-sm flex items-center justify-center text-[10px] font-bold text-brand uppercase" title={assignee}>
+                    {assignee.charAt(0)}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const KanbanBoard = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
+    return (
+        <div className="h-[600px] w-full bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
+                <div className="flex items-center gap-3">
+                    <div className="p-2 bg-brand/10 rounded-lg text-brand">
+                        <HugeiconsIcon icon={Kanban} size={20} />
+                    </div>
+                    <div>
+                        <h3 className="font-bold text-slate-900 leading-tight">Sprint Board</h3>
+                        <p className="text-slate-500 text-xs">Ekonty Marketplace v2.0</p>
+                    </div>
+                </div>
+                <div className="flex gap-2">
+                    <Button variant="outline" size="sm" onClick={() => onShowCode('Kanban Board', '<KanbanBoard />')} icon={Code} aria-label="View Code" />
+                    <Button variant="outline" size="sm" icon={Search} aria-label="Search" />
+                    <Button variant="primary" size="sm" icon={Plus}>New Sprint</Button>
+                </div>
+            </div>
+            <div className="flex-1 overflow-x-auto p-6 bg-slate-50/50">
+                <div className="flex gap-6 h-full">
+                    <KanbanColumn title="Backlog" count={12} onAddTask={() => { }}>
+                        <TaskCard title="Refactor Navigation Component" priority="Low" assignee="Sarah" comments={2} attachments={0} />
+                        <TaskCard title="Update Color Palette Tokens" priority="Medium" assignee="Mike" comments={5} attachments={1} />
+                        <TaskCard title="Fix Mobile Menu Glitch" priority="Low" assignee="John" comments={0} attachments={0} />
+                    </KanbanColumn>
+                    <KanbanColumn title="In Progress" count={4} onAddTask={() => { }}>
+                        <TaskCard title="Integrate Hugeicons Library" priority="High" assignee="Kofi" comments={8} attachments={3} />
+                        <TaskCard title="Design System Documentation" priority="Medium" assignee="Sarah" comments={3} attachments={2} />
+                    </KanbanColumn>
+                    <KanbanColumn title="Completed" count={28} onAddTask={() => { }}>
+                        <TaskCard title="Setup React Project" priority="High" assignee="Mike" comments={1} attachments={0} />
+                        <TaskCard title="Initial Component Audit" priority="Low" assignee="Kofi" comments={0} attachments={1} />
+                    </KanbanColumn>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const ChatMessage = ({ name, time, message, isSystem = false, isMe = false, avatar }: { name?: string, time?: string, message: string, isSystem?: boolean, isMe?: boolean, avatar?: string }) => {
+    if (isSystem) {
+        return (
+            <div className="flex items-center justify-center gap-2 py-2 opacity-60">
+                <div className="h-px w-8 bg-slate-300"></div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{message}</span>
+                <div className="h-px w-8 bg-slate-300"></div>
+            </div>
+        );
+    }
+
+    return (
+        <div className={`flex gap-3 group animate-in fade-in slide-in-from-bottom-2 duration-300 ${isMe ? 'flex-row-reverse' : ''}`}>
+            {!isMe && (
+                <div className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white shadow-sm flex-shrink-0 overflow-hidden">
+                    {avatar ? <img src={avatar} className="w-full h-full object-cover" alt={name} /> : <div className="w-full h-full flex items-center justify-center text-slate-500 text-xs font-bold">{name?.charAt(0)}</div>}
+                </div>
+            )}
+            <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[80%]`}>
+                <div className="flex items-baseline gap-2 mb-1">
+                    <span className="text-xs font-bold text-slate-700">{name}</span>
+                    <span className="text-[10px] text-slate-400 font-medium">{time}</span>
+                </div>
+                <div className={`p-3 rounded-2xl text-sm font-body leading-relaxed shadow-sm ${isMe ? 'bg-brand text-white rounded-tr-sm' : 'bg-white text-slate-700 rounded-tl-sm border border-slate-100'}`}>
+                    {message}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const ChatSystem = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
+    const channels = [
+        { name: 'general', active: false },
+        { name: 'design-system', active: true },
+        { name: 'marketplace-bugs', active: false },
+        { name: 'random', active: false },
+    ];
+
+    return (
+        <div className="h-[600px] w-full bg-white rounded-2xl border border-slate-200 overflow-hidden flex shadow-xl">
+            {/* Sidebar */}
+            <div className="w-64 bg-slate-50 border-r border-slate-100 flex flex-col hidden md:flex">
+                <div className="p-4 border-b border-slate-100 mb-2">
+                    <h4 className="font-bold text-slate-700 flex items-center gap-2">
+                        <span className="w-6 h-6 rounded bg-brand text-white flex items-center justify-center text-xs">E</span>
+                        Ekonty Team
+                    </h4>
+                </div>
+                <div className="flex-1 overflow-y-auto px-3 py-2 space-y-6">
+                    <div>
+                        <div className="flex items-center justify-between px-2 mb-2">
+                            <h5 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Channels</h5>
+                            <HugeiconsIcon icon={Plus} size={12} className="text-slate-400 cursor-pointer hover:text-brand" />
+                        </div>
+                        <div className="space-y-0.5">
+                            {channels.map(channel => (
+                                <div
+                                    key={channel.name}
+                                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors ${channel.active ? 'bg-white text-brand shadow-sm border border-slate-100/50' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'}`}
+                                >
+                                    <HugeiconsIcon icon={Hash} size={14} className={channel.active ? 'text-brand' : 'opacity-50'} />
+                                    {channel.name}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className="p-4 border-t border-slate-100 bg-slate-50/50">
+                    <div className="flex items-center gap-3">
+                        <div className="relative">
+                            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs ring-2 ring-white shadow-sm">K</div>
+                            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success border-2 border-white rounded-full"></div>
+                        </div>
+                        <div className="flex-1">
+                            <p className="text-xs font-bold text-slate-700">Kofi Mensah</p>
+                            <p className="text-[10px] text-slate-400">Online</p>
+                        </div>
+                        <HugeiconsIcon icon={Settings} size={16} className="text-slate-400 hover:text-slate-600 cursor-pointer" />
+                    </div>
+                </div>
+            </div>
+
+            {/* Chat Area */}
+            <div className="flex-1 flex flex-col bg-slate-50/30">
+                <div className="h-16 border-b border-slate-100 bg-white flex items-center justify-between px-4 sticky top-0 z-10">
+                    <div className="flex items-center gap-2">
+                        <div className="md:hidden mr-2">
+                            <HugeiconsIcon icon={Kanban} size={20} className="text-slate-400" />
+                        </div>
+                        <HugeiconsIcon icon={Hash} size={18} className="text-slate-400" />
+                        <h3 className="font-bold text-slate-800">design-system</h3>
+                        <span className="text-xs text-slate-400 ml-2 hidden sm:inline-block">Updated branding guidelines</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => onShowCode('Chat System', '<ChatSystem />')} className="text-slate-400 hover:text-brand transition-colors" title="View Code">
+                            <HugeiconsIcon icon={Code} size={18} />
+                        </button>
+                        <div className="flex -space-x-2">
+                            {[1, 2, 3].map(i => (
+                                <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500">U{i}</div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-4 space-y-6">
+                    <ChatMessage isSystem message="Kofi joined the channel" />
+                    <ChatMessage name="Sarah David" time="10:30 AM" message="Hey team! I've just updated the typography tokens in the main branch." />
+                    <ChatMessage name="Mike Johnson" time="10:32 AM" message="Awesome! Does this include the new Inter font weights?" />
+                    <ChatMessage name="Sarah David" time="10:35 AM" message="Yes, all weights from 400 to 700 are now available." />
+                    <ChatMessage name="Kofi Mensah" time="10:42 AM" isMe message="Great work! I'll update the Kanban board components to use them." />
+                    <div className="flex items-center gap-2 px-4 opacity-50">
+                        <div className="flex space-x-1">
+                            <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                            <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                            <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                        </div>
+                        <span className="text-xs font-medium text-slate-400">Sarah is typing...</span>
+                    </div>
+                </div>
+
+                <div className="p-4 bg-white border-t border-slate-100">
+                    <div className="relative">
+                        <input
+                            type="text"
+                            placeholder="Message #design-system..."
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-4 pr-32 focus:outline-none focus:border-brand focus:ring-4 focus:ring-brand/10 transition-all text-sm"
+                        />
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                            <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                                <HugeiconsIcon icon={Attachment} size={18} />
+                            </button>
+                            <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                                <HugeiconsIcon icon={Smile} size={18} />
+                            </button>
+                            <button className="p-2 bg-brand text-white rounded-lg hover:bg-brand/90 shadow-sm transition-all hover:scale-105 active:scale-95">
+                                <HugeiconsIcon icon={Send} size={16} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const TeamCollaboration = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
+    const [view, setView] = useState<'kanban' | 'chat'>('kanban');
+
+    return (
+        <div className="space-y-8 animate-in fade-in duration-500">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 className="text-3xl font-bold text-slate-900 font-heading mb-2">Team Collaboration</h2>
+                    <p className="text-slate-500 font-body max-w-2xl">Internal tools should feel as polished as the external marketplace to boost team productivity.</p>
+                </div>
+                <div className="bg-slate-100 p-1 rounded-xl flex gap-1 self-start">
+                    <button
+                        onClick={() => setView('kanban')}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${view === 'kanban' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                        <HugeiconsIcon icon={Kanban} size={16} />
+                        Workflow
+                    </button>
+                    <button
+                        onClick={() => setView('chat')}
+                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${view === 'chat' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                    >
+                        <HugeiconsIcon icon={MessageSquare} size={16} />
+                        Connect
+                    </button>
+                </div>
+            </div>
+
+            <div className="mt-8">
+                {view === 'kanban' ? <KanbanBoard onShowCode={onShowCode} /> : <ChatSystem onShowCode={onShowCode} />}
+            </div>
+        </div>
+    );
+};
+
 interface SectionProps {
     title: string;
     subtitle: string;
@@ -770,7 +1077,8 @@ const EkontyDesignSystem = () => {
         { name: 'Components', icon: Atoms },
         { name: 'Assets', icon: Icons },
         { name: 'Cards', icon: User },
-        { name: 'Interactions', icon: Motion }
+        { name: 'Interactions', icon: Motion },
+        { name: 'Collaboration', icon: Team }
     ];
 
     return (
@@ -1048,6 +1356,10 @@ const EkontyDesignSystem = () => {
                             subtitle="Animation should be purposeful and subtle. We use physics-based transitions to make the UI feel reactive and alive.">
                             <InteractionShowcase onShowCode={showCode} />
                         </Section>
+                    )}
+
+                    {activeTab === 'Collaboration' && (
+                        <TeamCollaboration onShowCode={showCode} />
                     )}
                 </div>
             </main>
