@@ -1402,7 +1402,7 @@ const EkontyDesignSystem = () => {
                             subtitle="Our palette is designed to maintain brand recognition while providing functional visual cues for success, errors, and warnings.">
                             {activeComponentDetail && activeComponentDetail.startsWith('colors-') ? (
                                 <ComponentDetailView
-                                    title={activeComponentDetail === 'colors-brand' ? 'Brand Palette' : activeComponentDetail === 'colors-semantic' ? 'Semantic Colors' : 'Neutral Palette'}
+                                    title={activeComponentDetail === 'colors-brand' ? '' : activeComponentDetail === 'colors-semantic' ? '' : ''}
                                     onBack={() => setActiveComponentDetail(null)}
                                     examples={
                                         activeComponentDetail === 'colors-brand' ? [
@@ -1433,7 +1433,7 @@ const EkontyDesignSystem = () => {
                                 subtitle="We use Outfit for a modern, confident heading style and Plus Jakarta Sans for an incredibly readable body text.">
                                 {activeComponentDetail === 'typography' ? (
                                     <ComponentDetailView
-                                        title="Typography Scale"
+                                        title=""
                                         onBack={() => setActiveComponentDetail(null)}
                                         examples={[
                                             {
@@ -1490,7 +1490,7 @@ const EkontyDesignSystem = () => {
                                         <>
                                             {activeComponentDetail === 'buttons' && (
                                                 <ComponentDetailView
-                                                    title="Buttons"
+                                                    title=""
                                                     onBack={() => setActiveComponentDetail(null)}
                                                     examples={[
                                                         {
@@ -1555,11 +1555,11 @@ const EkontyDesignSystem = () => {
 
                                             {activeComponentDetail === 'inputs' && (
                                                 <ComponentDetailView
-                                                    title="Form Inputs"
+                                                    title=""
                                                     onBack={() => setActiveComponentDetail(null)}
                                                     examples={[
                                                         {
-                                                            title: "Standard Input",
+                                                            title: "Form Inputs",
                                                             preview: <div className="w-full max-w-sm"><Input label="Email Address" placeholder="name@example.com" icon={Mail} /></div>,
                                                             code: `<div className="space-y-1.5 w-full">
     <label className="text-sm font-bold text-slate-700 font-body uppercase tracking-wider text-[11px]">Email Address</label>
@@ -1619,7 +1619,7 @@ const EkontyDesignSystem = () => {
 
                                             {activeComponentDetail === 'complex' && (
                                                 <ComponentDetailView
-                                                    title="Search & Specialized Inputs"
+                                                    title=""
                                                     onBack={() => setActiveComponentDetail(null)}
                                                     examples={[
                                                         {
@@ -1686,7 +1686,7 @@ const EkontyDesignSystem = () => {
 
                                             {activeComponentDetail === 'alerts' && (
                                                 <ComponentDetailView
-                                                    title="Feedback & Alerts"
+                                                    title=""
                                                     onBack={() => setActiveComponentDetail(null)}
                                                     examples={[
                                                         {
@@ -1739,7 +1739,7 @@ const EkontyDesignSystem = () => {
 
                                             {activeComponentDetail === 'darkmode' && (
                                                 <ComponentDetailView
-                                                    title="Theming & Dark Mode"
+                                                    title=""
                                                     onBack={() => setActiveComponentDetail(null)}
                                                     examples={[
                                                         {
@@ -1782,7 +1782,7 @@ const EkontyDesignSystem = () => {
 
                                             {activeComponentDetail === 'toggles' && (
                                                 <ComponentDetailView
-                                                    title="Switch Toggles"
+                                                    title=""
                                                     onBack={() => setActiveComponentDetail(null)}
                                                     examples={[
                                                         {
@@ -2077,11 +2077,11 @@ const EkontyDesignSystem = () => {
                     {
                         activeTab === 'Cards' && (
                             <Section
-                                title="Voice & Card Layouts"
+                                title="Card Layouts"
                                 subtitle="Our components scale seamlessly across different content types. Here is how we handle text-heavy, media-focused, and profile-based cards.">
                                 {activeComponentDetail === 'cards' ? (
                                     <ComponentDetailView
-                                        title="Card Layouts"
+                                        title=""
                                         onBack={() => setActiveComponentDetail(null)}
                                         examples={[
                                             {
@@ -2219,7 +2219,7 @@ const EkontyDesignSystem = () => {
                                 subtitle="Animation should be purposeful and subtle. We use physics-based transitions to make the UI feel reactive and alive.">
                                 {activeComponentDetail === 'interactions' ? (
                                     <ComponentDetailView
-                                        title="Interaction Patterns"
+                                        title=""
                                         onBack={() => setActiveComponentDetail(null)}
                                         examples={[
                                             {
