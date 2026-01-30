@@ -1049,7 +1049,10 @@ const ChatSystem = ({ onViewDetail }: { onViewDetail: (section: string) => void 
                             variant="outline"
                             size="sm"
                             onClick={() => onViewDetail('chat-system')}
-                        />
+                            icon={Code}
+                        >
+                            View Code
+                        </Button>
                         <div className="flex -space-x-2">
                             {[1, 2, 3].map(i => (
                                 <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500">U{i}</div>
@@ -2412,7 +2415,7 @@ const EkontyDesignSystem = () => {
                                             {
                                                 title: "Messaging System",
                                                 preview: (
-                                                    <div className="bg-slate-50 p-8 w-full">
+                                                    <div className="bg-slate-50 p-2 w-full">
                                                         <ChatSystem onViewDetail={() => { }} />
                                                     </div>
                                                 ),
