@@ -37,7 +37,10 @@ import {
     Attachment01Icon as Attachment,
     SmileIcon as Smile,
     MoreHorizontalIcon as MoreHorizontal,
-    UserGroupIcon as Team
+    UserGroupIcon as Team,
+    Tick01Icon as Checkmark,
+    Calendar01Icon as Calendar,
+    PencilEdit01Icon as Edit
 } from '@hugeicons/core-free-icons';
 
 // --- PILLAR 1: COLOR ARCHITECTURE ---
@@ -794,59 +797,84 @@ const ComponentDetailView = ({
 
 // --- PILLAR 8: TEAM COLLABORATION ---
 const KanbanColumn = ({ title, count, children, onAddTask }: { title: string, count: number, children: React.ReactNode, onAddTask: () => void }) => (
-    <div className="flex flex-col h-full min-w-[280px] w-80 bg-slate-50 rounded-2xl p-4 border border-slate-100">
+    <div className="flex flex-col h-full min-w-[280px] w-80 bg-slate-50 rounded-2xl p-4 border border-slate-100 group/column">
         <div className="flex items-center justify-between mb-4 px-1">
             <h4 className="font-bold text-slate-700 text-sm">{title}</h4>
             <span className="bg-white px-2 py-0.5 rounded-full text-[10px] font-bold text-slate-400 border border-slate-100 shadow-sm">{count}</span>
         </div>
-        <div className="flex-1 overflow-y-auto space-y-3 pr-1 custom-scrollbar">
+        <div className="flex-1 space-y-3 pr-1">
             {children}
         </div>
-        <button
-            onClick={onAddTask}
-            className="mt-4 w-full py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-brand hover:bg-white rounded-xl transition-all text-sm font-bold border border-transparent hover:border-slate-100 hover:shadow-sm"
-        >
-            <HugeiconsIcon icon={Plus} size={16} />
-            <span>Add Task</span>
-        </button>
+        <div className="opacity-0 group-[&:has(.task-card:hover)]:opacity-100 hover:opacity-100 transition-opacity duration-300">
+            <button
+                onClick={onAddTask}
+                className="mt-4 w-full py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-brand hover:bg-white rounded-xl transition-all text-sm font-bold border border-transparent hover:border-slate-100 hover:shadow-sm"
+            >
+                <HugeiconsIcon icon={Plus} size={16} />
+                <span>Add Task</span>
+            </button>
+        </div>
     </div>
 );
 
-const TaskCard = ({ title, priority, assignee, comments, attachments }: { title: string, priority: 'Low' | 'Medium' | 'High', assignee: string, comments: number, attachments: number }) => {
-    const priorityColors = {
-        Low: 'bg-slate-100 text-slate-500',
-        Medium: 'bg-warning/10 text-warning',
-        High: 'bg-danger/10 text-danger'
-    };
+const TaskCard = ({ title }: { title: string }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [notificationText, setNotificationText] = useState("set user notification");
 
     return (
-        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm hover:shadow-md cursor-pointer transition-all duration-200 group animate-in fade-in zoom-in duration-300">
-            <div className="flex justify-between items-start mb-3">
-                <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${priorityColors[priority]}`}>
-                    {priority}
-                </span>
-                <button className="text-slate-300 hover:text-slate-600">
-                    <HugeiconsIcon icon={MoreHorizontal} size={16} />
-                </button>
-            </div>
-            <h5 className="font-bold text-slate-800 text-sm mb-4 leading-snug font-body">{title}</h5>
-            <div className="flex items-center justify-between pt-3 border-t border-slate-50">
-                <div className="flex items-center gap-3">
-                    {comments > 0 && (
-                        <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">
-                            <HugeiconsIcon icon={MessageSquare} size={12} />
-                            <span>{comments}</span>
-                        </div>
-                    )}
-                    {attachments > 0 && (
-                        <div className="flex items-center gap-1 text-slate-400 text-xs font-medium">
-                            <HugeiconsIcon icon={Attachment} size={12} />
-                            <span>{attachments}</span>
+        <div className="task-card bg-white p-4 rounded-xl border border-slate-100 shadow-sm cursor-pointer transition-all duration-200 group/card animate-in fade-in zoom-in duration-300">
+            {/* Notification Text and Edit Icon */}
+            <div className="flex items-center justify-between mb-3 gap-2">
+                <div className="flex items-center gap-1 min-w-0 flex-1">
+                    {isEditing ? (
+                        <input
+                            autoFocus
+                            className="bg-transparent border-b border-brand outline-none text-[10px] font-bold uppercase tracking-wider text-slate-500 w-full"
+                            value={notificationText}
+                            onChange={(e) => setNotificationText(e.target.value)}
+                            onBlur={() => setIsEditing(false)}
+                            onKeyDown={(e) => e.key === 'Enter' && setIsEditing(false)}
+                        />
+                    ) : (
+                        <div className="flex items-center gap-1 min-w-0 flex-1 group/edit">
+                            <span className="truncate text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                                {notificationText}
+                            </span>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
+                                className="opacity-0 group-hover/card:opacity-100 transition-opacity flex-shrink-0 w-4 h-4 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-sm hover:border-brand/50 hover:bg-white transition-all"
+                            >
+                                <HugeiconsIcon icon={Edit} size={12} className="text-slate-400 hover:text-brand" />
+                            </button>
                         </div>
                     )}
                 </div>
-                <div className="w-6 h-6 rounded-full bg-brand/10 border border-white shadow-sm flex items-center justify-center text-[10px] font-bold text-brand uppercase" title={assignee}>
-                    {assignee.charAt(0)}
+                <button className="text-slate-300 hover:text-slate-600 flex-shrink-0">
+                    <HugeiconsIcon icon={MoreHorizontal} size={16} />
+                </button>
+            </div>
+
+            {/* Title with Surface Color BG */}
+            <div className="bg-brand-custom rounded-sm mb-3">
+                <h5 className="font-bold text-slate-500 text-sm leading-snug font-body">{title}</h5>
+            </div>
+
+            {/* Date Badge */}
+            <div className="inline-flex items-center gap-2 px-2 py-1 bg-slate-50 border border-slate-100/50 rounded-2xl mb-4">
+                <HugeiconsIcon icon={Calendar} size={12} className="text-slate-400" />
+                <span className="text-[10px] font-bold text-slate-500">Jan 30, 2026</span>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-between pt-3 border-t border-slate-50">
+                <div className="flex items-center gap-2 text-slate-500">
+                    <div className="w-4 h-4 flex items-center justify-center bg-brand/10 border border-brand/20 rounded-sm select-none">
+                        <HugeiconsIcon icon={Checkmark} size={12} className="text-brand" />
+                    </div>
+                    <span className="text-[10px] font-bold">SAM1-6</span>
+                </div>
+                <div className="w-5 h-5 rounded-full bg-brand-custom border border-brand/5 flex items-center justify-center text-brand shadow-sm">
+                    <HugeiconsIcon icon={User} size={12} />
                 </div>
             </div>
         </div>
@@ -867,25 +895,75 @@ const KanbanBoard = ({ onShowCode }: { onShowCode: (title: string, code: string)
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => onShowCode('Kanban Board', '<KanbanBoard />')} icon={Code} aria-label="View Code" />
-                    <Button variant="outline" size="sm" icon={Search} aria-label="Search" />
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onShowCode('Kanban Task Card', `const TaskCard = ({ title }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [notificationText, setNotificationText] = useState("set user notification");
+
+    return (
+        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm transition-all duration-200 group animate-in fade-in zoom-in">
+            {/* Header: Notification & Actions */}
+            <div className="flex items-center justify-between mb-3 gap-2">
+                <div className="flex items-center gap-1 min-w-0 flex-1">
+                    <div className="flex items-center gap-1 min-w-0 flex-1 group/edit">
+                        <span className="truncate text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                            \${notificationText}
+                        </span>
+                        <button className="opacity-0 group-hover:opacity-100 w-4 h-4 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-sm">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                <button className="text-slate-300 hover:text-slate-600">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                </button>
+            </div>
+
+            {/* Content: Title with Surface Color BG */}
+            <div className="bg-emerald-50/50 rounded-sm mb-3">
+                <h5 className="font-bold text-slate-500 text-sm leading-snug p-2 italic">\${title}</h5>
+            </div>
+
+            {/* Date Badge */}
+            <div className="inline-flex items-center gap-2 px-2 py-1 bg-slate-50 border border-slate-100/50 rounded-full mb-4">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                <span className="text-[10px] font-bold text-slate-500">Jan 30, 2026</span>
+            </div>
+
+            {/* Footer: Status & User */}
+            <div className="flex items-center justify-between pt-3 border-t border-slate-50">
+                <div className="flex items-center gap-2 text-slate-500">
+                    <div className="w-4 h-4 flex items-center justify-center bg-emerald-100 border border-emerald-200 rounded-sm">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </div>
+                    <span className="text-[10px] font-bold">SAM1-6</span>
+                </div>
+                <div className="w-5 h-5 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-sm">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </div>
+            </div>
+        </div>
+    );
+};`)} icon={Code}>View Code</Button>
                     <Button variant="primary" size="sm" icon={Plus}>New Sprint</Button>
                 </div>
             </div>
             <div className="flex-1 overflow-x-auto p-6 bg-slate-50/50">
                 <div className="flex gap-6 h-full">
                     <KanbanColumn title="Backlog" count={12} onAddTask={() => { }}>
-                        <TaskCard title="Refactor Navigation Component" priority="Low" assignee="Sarah" comments={2} attachments={0} />
-                        <TaskCard title="Update Color Palette Tokens" priority="Medium" assignee="Mike" comments={5} attachments={1} />
-                        <TaskCard title="Fix Mobile Menu Glitch" priority="Low" assignee="John" comments={0} attachments={0} />
+                        <TaskCard title="Refactor Navigation Component" />
+                        <TaskCard title="Update Color Palette Tokens" />
+                        <TaskCard title="Fix Mobile Menu Glitch" />
                     </KanbanColumn>
                     <KanbanColumn title="In Progress" count={4} onAddTask={() => { }}>
-                        <TaskCard title="Integrate Hugeicons Library" priority="High" assignee="Kofi" comments={8} attachments={3} />
-                        <TaskCard title="Design System Documentation" priority="Medium" assignee="Sarah" comments={3} attachments={2} />
+                        <TaskCard title="Integrate Hugeicons Library" />
+                        <TaskCard title="Design System Documentation" />
                     </KanbanColumn>
                     <KanbanColumn title="Completed" count={28} onAddTask={() => { }}>
-                        <TaskCard title="Setup React Project" priority="High" assignee="Mike" comments={1} attachments={0} />
-                        <TaskCard title="Initial Component Audit" priority="Low" assignee="Kofi" comments={0} attachments={1} />
+                        <TaskCard title="Setup React Project" />
+                        <TaskCard title="Initial Component Audit" />
                     </KanbanColumn>
                 </div>
             </div>
