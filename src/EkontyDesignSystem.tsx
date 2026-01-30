@@ -46,8 +46,8 @@ import {
 // --- PILLAR 1: COLOR ARCHITECTURE ---
 const colors = {
     brand: [
-        { name: 'Ekonty Brand', tailwind: 'brand', role: 'Primary Brand Color' },
-        { name: 'Brand Surface', tailwind: 'brand-custom', role: 'Secondary / Surface Color' },
+        { name: 'Ekonty Brand', tailwind: 'bg-emerald-800', role: 'Primary Brand Color' },
+        { name: 'Brand Surface', tailwind: 'bg-emerald-800/10', role: 'Secondary / Surface Color' },
     ],
     semantic: [
         { name: 'Success', tailwind: 'success', role: 'Positive actions, confirmations' },
@@ -1383,7 +1383,7 @@ const EkontyDesignSystem = () => {
                                 </div>
                                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
                                     <h3 className="text-xl font-bold text-slate-800 mb-4 font-heading">Quick Links</h3>
-                                    <div className="bg-emerald-800/10">check</div>
+                                    {/* <div className="bg-emerald-800/10">check</div> */}
                                     {/* <button className=" rounded-xl transition-all duration-200 ease-in-out bg-emerald-800 text-white shadow-sm hover:bg-emerald-800/90 focus-visible:ring-emerald-800 px-5 py-2.5 text-sm">Primary Action</button> */}
                                     <div className="grid grid-cols-2 gap-4">
                                         {['Figma File', 'Token JSON', 'Usage Guide', 'Accessibility'].map(link => (
