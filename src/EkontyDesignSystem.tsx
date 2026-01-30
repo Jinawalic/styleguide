@@ -386,7 +386,7 @@ const Button = ({ variant = 'primary', size = 'md', rounded = 'xl', children, is
     const baseStyles = "inline-flex items-center justify-center font-semibold transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]";
 
     const variants = {
-        primary: "bg-brand text-white shadow-sm hover:bg-brand/90 hover:shadow-md focus-visible:ring-brand",
+        primary: "bg-emerald-800 text-white shadow-sm hover:bg-emerald-800/90 hover:shadow-md focus-visible:ring-brand",
         secondary: "bg-slate-200 text-slate-900 shadow-sm hover:bg-slate-300 focus-visible:ring-slate-400",
         outline: "bg-transparent border-2 border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50 focus-visible:ring-slate-400",
         ghost: "bg-transparent text-slate-600 hover:bg-slate-100 focus-visible:ring-slate-200",
@@ -538,7 +538,7 @@ const Checkbox = ({ label, ...props }: CheckboxProps) => (
                 className="peer sr-only"
                 {...props}
             />
-            <div className="w-5 h-5 border-2 border-slate-200 rounded-md transition-all peer-checked:bg-brand peer-checked:border-brand group-hover:border-brand/50"></div>
+            <div className="w-5 h-5 border-2 border-slate-200 rounded-md transition-all peer-checked:bg-emerald-800 peer-checked:border-brand group-hover:border-brand/50"></div>
             <div className="absolute text-white transition-opacity opacity-0 peer-checked:opacity-100 flex items-center justify-center">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
@@ -554,7 +554,7 @@ interface ToggleProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const Toggle = ({ label, variant = 'brand', ...props }: ToggleProps) => {
     const variantColors = {
-        brand: 'peer-checked:bg-brand',
+        brand: 'peer-checked:bg-emerald-800',
         secondary: 'peer-checked:bg-slate-600',
         success: 'peer-checked:bg-success',
         warning: 'peer-checked:bg-warning',
@@ -716,7 +716,7 @@ const InteractionShowcase = ({ onViewDetail }: { onViewDetail: (section: string)
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 pt-4">
                 <div className="space-y-3 cursor-default group">
                     <p className="text-xs font-bold text-slate-400 uppercase">Hover Effect</p>
-                    <div className="h-20 w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center hover:bg-brand hover:text-white hover:scale-105 transition-all duration-300 group-hover:border-transparent">
+                    <div className="h-20 w-full bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center hover:bg-emerald-800 hover:text-white hover:scale-105 transition-all duration-300 group-hover:border-transparent">
                         <span className="text-sm font-bold group-hover:translate-x-1 transition-transform">Hover Me</span>
                     </div>
                 </div>
@@ -910,7 +910,7 @@ const KanbanBoard = ({ onViewDetail }: { onViewDetail: (section: string) => void
         <div className="h-[600px] w-full bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
             <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 bg-brand/10 rounded-lg text-brand">
+                    <div className="p-2 bg-emerald-800/10 rounded-lg text-brand">
                         <HugeiconsIcon icon={Kanban} size={20} />
                     </div>
                     <div>
@@ -974,7 +974,7 @@ const ChatMessage = ({ name, time, message, isSystem = false, isMe = false, avat
                     <span className="text-xs font-bold text-slate-700">{name}</span>
                     <span className="text-[10px] text-slate-400 font-medium">{time}</span>
                 </div>
-                <div className={`p-3 rounded-2xl text-sm font-body leading-relaxed shadow-sm ${isMe ? 'bg-brand text-white rounded-tr-sm' : 'bg-white text-slate-700 rounded-tl-sm border border-slate-100'}`}>
+                <div className={`p-3 rounded-2xl text-sm font-body leading-relaxed shadow-sm ${isMe ? 'bg-emerald-800 text-white rounded-tr-sm' : 'bg-white text-slate-700 rounded-tl-sm border border-slate-100'}`}>
                     {message}
                 </div>
             </div>
@@ -996,7 +996,7 @@ const ChatSystem = ({ onViewDetail }: { onViewDetail: (section: string) => void 
             <div className="w-64 bg-slate-50 border-r border-slate-100 flex flex-col hidden md:flex">
                 <div className="p-4 border-b border-slate-100 mb-2">
                     <h4 className="font-bold text-slate-700 flex items-center gap-2">
-                        <span className="w-6 h-6 rounded bg-brand text-white flex items-center justify-center text-xs">E</span>
+                        <span className="w-6 h-6 rounded bg-emerald-800 text-white flex items-center justify-center text-xs">E</span>
                         Ekonty Team
                     </h4>
                 </div>
@@ -1091,7 +1091,7 @@ const ChatSystem = ({ onViewDetail }: { onViewDetail: (section: string) => void 
                             <button className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
                                 <HugeiconsIcon icon={Smile} size={18} />
                             </button>
-                            <button className="p-2 bg-brand text-white rounded-lg hover:bg-brand/90 shadow-sm transition-all hover:scale-105 active:scale-95">
+                            <button className="p-2 bg-emerald-800 text-white rounded-lg hover:bg-emerald-800/90 shadow-sm transition-all hover:scale-105 active:scale-95">
                                 <HugeiconsIcon icon={Send} size={16} />
                             </button>
                         </div>
@@ -1256,7 +1256,7 @@ const EkontyDesignSystem = () => {
                             key={item.name}
                             onClick={() => { setActiveTab(item.name); setActiveComponentDetail(null); }}
                             className={`w-full text-left px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 flex items-center gap-3
-                ${activeTab === item.name ? 'bg-brand text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}
+                ${activeTab === item.name ? 'bg-emerald-800 text-white shadow-md' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}
 `}
                         >
                             <HugeiconsIcon icon={item.icon} size={18} />
@@ -1366,7 +1366,7 @@ const EkontyDesignSystem = () => {
                                     </p>
                                     <div className="flex gap-4">
                                         <button className="px-6 py-3 bg-white text-brand font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105">Browse Components</button>
-                                        <button className="px-6 py-3 bg-brand/20 border border-white/20 text-white font-bold rounded-xl hover:bg-brand/30 transition-all">Download Assets</button>
+                                        <button className="px-6 py-3 bg-emerald-800/20 border border-white/20 text-white font-bold rounded-xl hover:bg-emerald-800/30 transition-all">Download Assets</button>
                                     </div>
                                 </div>
                             </div>
@@ -1383,10 +1383,11 @@ const EkontyDesignSystem = () => {
                                 </div>
                                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
                                     <h3 className="text-xl font-bold text-slate-800 mb-4 font-heading">Quick Links</h3>
+                                    <button className=" rounded-xl transition-all duration-200 ease-in-out bg-emerald-800 text-white shadow-sm hover:bg-emerald-800/90 focus-visible:ring-emerald-800 px-5 py-2.5 text-sm">Primary Action</button>
                                     <div className="grid grid-cols-2 gap-4">
                                         {['Figma File', 'Token JSON', 'Usage Guide', 'Accessibility'].map(link => (
                                             <div key={link} className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer transition-colors">
-                                                <div className="w-2 h-2 bg-brand rounded-full"></div>
+                                                <div className="w-2 h-2 bg-emerald-800 rounded-full"></div>
                                                 <span className="text-sm font-bold text-slate-600">{link}</span>
                                             </div>
                                         ))}
@@ -1406,8 +1407,8 @@ const EkontyDesignSystem = () => {
                                     onBack={() => setActiveComponentDetail(null)}
                                     examples={
                                         activeComponentDetail === 'colors-brand' ? [
-                                            { title: 'Ekonty Brand', preview: <div className="w-24 h-24 rounded-xl shadow-sm bg-brand"></div>, code: `<div className="emerald-800"></div>` },
-                                            { title: 'Brand Surface', preview: <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-100 bg-brand-custom"></div>, code: `<div className="emerald-50"></div>` }
+                                            { title: 'Ekonty Brand', preview: <div className="w-24 h-24 rounded-xl shadow-sm bg-emerald-800"></div>, code: `<div className="emerald-800"></div>` },
+                                            { title: 'Brand Surface', preview: <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-100 bg-emerald-800-custom"></div>, code: `<div className="emerald-50"></div>` }
                                         ] : activeComponentDetail === 'colors-semantic' ? [
                                             { title: 'Success', preview: <div className="w-24 h-24 rounded-xl bg-success"></div>, code: `<div className="emerald-500"></div>` },
                                             { title: 'Warning', preview: <div className="w-24 h-24 rounded-xl bg-warning"></div>, code: `<div className="bg-amber-500"></div>` },
@@ -1496,7 +1497,7 @@ const EkontyDesignSystem = () => {
                                                         {
                                                             title: "Primary Button",
                                                             preview: <Button variant="primary">Primary Action</Button>,
-                                                            code: `<button className="inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 ease-in-out bg-brand text-white shadow-sm hover:bg-brand/90 focus-visible:ring-brand px-5 py-2.5 text-sm">Primary Action</button>`
+                                                            code: `<button className=" rounded-xl transition-all duration-200 ease-in-out bg-emerald-800 text-white shadow-sm hover:bg-emerald-800/90 focus-visible:ring-emerald-800 px-5 py-2.5 text-sm">Primary Action</button>`
                                                         },
                                                         {
                                                             title: "Secondary Button",
@@ -1516,7 +1517,7 @@ const EkontyDesignSystem = () => {
                                                         {
                                                             title: "Rounded Full Primary",
                                                             preview: <Button variant="primary" rounded="full">Pill Primary</Button>,
-                                                            code: `<button className="inline-flex items-center justify-center font-semibold rounded-full transition-all duration-200 ease-in-out bg-brand text-white shadow-sm hover:bg-brand/90 focus-visible:ring-brand px-5 py-2.5 text-sm">Pill Primary</button>`
+                                                            code: `<button className="inline-flex items-center justify-center font-semibold rounded-full transition-all duration-200 ease-in-out bg-emerald-800 text-white shadow-sm hover:bg-emerald-800/90 focus-visible:ring-emerald-800 px-5 py-2.5 text-sm">Pill Primary</button>`
                                                         },
                                                         {
                                                             title: "Rounded Full Warning",
@@ -1543,7 +1544,7 @@ const EkontyDesignSystem = () => {
                                                         {
                                                             title: "Loading State",
                                                             preview: <Button variant="primary" isLoading>Processing</Button>,
-                                                            code: `<button className="inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 ease-in-out bg-brand text-white shadow-sm hover:bg-brand/90 px-5 py-2.5 text-sm opacity-50 cursor-not-allowed">
+                                                            code: `<button className="inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 ease-in-out bg-emerald-800 text-white shadow-sm hover:bg-emerald-800/90 focus-visible:ring-emerald-800 px-5 py-2.5 text-sm opacity-50 cursor-not-allowed">
     <span className="animate-spin mr-2">...</span>
     Processing
 </button>`
@@ -1747,7 +1748,7 @@ const EkontyDesignSystem = () => {
                                                             preview: (
                                                                 <div className="dark bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-sm">
                                                                     <div className="flex justify-between items-center mb-6">
-                                                                        <div className="w-10 h-10 bg-brand/20 rounded-xl flex items-center justify-center">
+                                                                        <div className="w-10 h-10 bg-emerald-800/20 rounded-xl flex items-center justify-center">
                                                                             <HugeiconsIcon icon={Info} className="text-brand" size={20} />
                                                                         </div>
                                                                         <div className="px-2 py-1 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold rounded-lg">+12.5%</div>
@@ -1974,7 +1975,7 @@ const EkontyDesignSystem = () => {
                                                         <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex-1">
                                                             <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Standard Mode</h4>
                                                             <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
-                                                                <div className="w-8 h-8 bg-brand/10 rounded-lg mb-3"></div>
+                                                                <div className="w-8 h-8 bg-emerald-800/10 rounded-lg mb-3"></div>
                                                                 <div className="h-2 w-24 bg-slate-200 rounded-full mb-2"></div>
                                                                 <div className="h-2 w-16 bg-slate-100 rounded-full"></div>
                                                             </div>
@@ -1982,7 +1983,7 @@ const EkontyDesignSystem = () => {
                                                         <div className="p-6 bg-slate-900 rounded-2xl border border-slate-800 flex-1">
                                                             <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Dark Mode</h4>
                                                             <div className="p-4 bg-slate-800 rounded-xl border border-slate-700 shadow-lg">
-                                                                <div className="w-8 h-8 bg-brand/30 rounded-lg mb-3"></div>
+                                                                <div className="w-8 h-8 bg-emerald-800/30 rounded-lg mb-3"></div>
                                                                 <div className="h-2 w-24 bg-slate-700 rounded-full mb-2"></div>
                                                                 <div className="h-2 w-16 bg-slate-600 rounded-full"></div>
                                                             </div>
@@ -2224,7 +2225,7 @@ const EkontyDesignSystem = () => {
                                         examples={[
                                             {
                                                 title: "Hover Effect",
-                                                preview: <div className="w-full max-w-xs h-20 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center cursor-pointer hover:bg-brand hover:text-white hover:scale-105 transition-all duration-300 group"><span className="text-sm font-bold group-hover:translate-x-1 transition-transform">Hover Me</span></div>,
+                                                preview: <div className="w-full max-w-xs h-20 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center cursor-pointer hover:bg-emerald-800 hover:text-white hover:scale-105 transition-all duration-300 group"><span className="text-sm font-bold group-hover:translate-x-1 transition-transform">Hover Me</span></div>,
                                                 code: `<div className="h-14 w-24 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center cursor-pointer hover:bg-emerald-800 hover:text-white hover:scale-105 transition-all duration-300 group shadow-sm active:scale-95">
     <span className="text-sm font-bold group-hover:translate-x-1 transition-transform">Hover Me</span>
 </div>`
@@ -2549,7 +2550,7 @@ const EkontyDesignSystem = () => {
                         key={item.name}
                         onClick={() => { setActiveTab(item.name); setActiveComponentDetail(null); }}
                         className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-bold transition-all
-                  ${activeTab === item.name ? 'bg-brand text-white shadow-lg' : 'text-slate-500'}
+                  ${activeTab === item.name ? 'bg-emerald-800 text-white shadow-lg' : 'text-slate-500'}
                 `}
                     >
                         <HugeiconsIcon icon={item.icon} size={18} />
@@ -2559,7 +2560,7 @@ const EkontyDesignSystem = () => {
                 <button
                     onClick={() => { setActiveTab('Cards'); setActiveComponentDetail(null); }}
                     className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-[10px] font-bold transition-all
-                ${['Assets', 'Cards', 'Interactions', 'Collaboration'].includes(activeTab) ? 'bg-brand text-white shadow-lg' : 'text-slate-500'}
+                ${['Assets', 'Cards', 'Interactions', 'Collaboration'].includes(activeTab) ? 'bg-emerald-800 text-white shadow-lg' : 'text-slate-500'}
               `}
                 >
                     <HugeiconsIcon icon={MoreVertical} size={18} />
