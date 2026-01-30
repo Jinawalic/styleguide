@@ -1383,7 +1383,8 @@ const EkontyDesignSystem = () => {
                                 </div>
                                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
                                     <h3 className="text-xl font-bold text-slate-800 mb-4 font-heading">Quick Links</h3>
-                                    <button className=" rounded-xl transition-all duration-200 ease-in-out bg-emerald-800 text-white shadow-sm hover:bg-emerald-800/90 focus-visible:ring-emerald-800 px-5 py-2.5 text-sm">Primary Action</button>
+                                    <div className="bg-emerald-800/10">check</div>
+                                    {/* <button className=" rounded-xl transition-all duration-200 ease-in-out bg-emerald-800 text-white shadow-sm hover:bg-emerald-800/90 focus-visible:ring-emerald-800 px-5 py-2.5 text-sm">Primary Action</button> */}
                                     <div className="grid grid-cols-2 gap-4">
                                         {['Figma File', 'Token JSON', 'Usage Guide', 'Accessibility'].map(link => (
                                             <div key={link} className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl hover:bg-slate-100 cursor-pointer transition-colors">
@@ -1403,12 +1404,12 @@ const EkontyDesignSystem = () => {
                             subtitle="Our palette is designed to maintain brand recognition while providing functional visual cues for success, errors, and warnings.">
                             {activeComponentDetail && activeComponentDetail.startsWith('colors-') ? (
                                 <ComponentDetailView
-                                    title={activeComponentDetail === 'colors-brand' ? '' : activeComponentDetail === 'colors-semantic' ? '' : ''}
+                                    title={activeComponentDetail === 'bg-emerald-800' ? '' : activeComponentDetail === 'bg-emerald-800/10' ? '' : ''}
                                     onBack={() => setActiveComponentDetail(null)}
                                     examples={
                                         activeComponentDetail === 'colors-brand' ? [
                                             { title: 'Ekonty Brand', preview: <div className="w-24 h-24 rounded-xl shadow-sm bg-emerald-800"></div>, code: `<div className="emerald-800"></div>` },
-                                            { title: 'Brand Surface', preview: <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-100 bg-emerald-800-custom"></div>, code: `<div className="emerald-50"></div>` }
+                                            { title: 'Brand Surface', preview: <div className="w-24 h-24 rounded-xl shadow-sm border border-slate-100 bg-emerald-800/10"></div>, code: `<div className="emerald-800/10"></div>` }
                                         ] : activeComponentDetail === 'colors-semantic' ? [
                                             { title: 'Success', preview: <div className="w-24 h-24 rounded-xl bg-success"></div>, code: `<div className="emerald-500"></div>` },
                                             { title: 'Warning', preview: <div className="w-24 h-24 rounded-xl bg-warning"></div>, code: `<div className="bg-amber-500"></div>` },
