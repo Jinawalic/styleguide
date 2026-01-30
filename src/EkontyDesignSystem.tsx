@@ -36,11 +36,11 @@ import {
     Comment01Icon as MessageSquare,
     Attachment01Icon as Attachment,
     SmileIcon as Smile,
-    MoreHorizontalIcon as MoreHorizontal,
+    // MoreHorizontalIcon as MoreHorizontal,
     UserGroupIcon as Team,
-    Tick01Icon as Checkmark,
-    Calendar01Icon as Calendar,
-    PencilEdit01Icon as Edit
+    // Tick01Icon as Checkmark,
+    // Calendar01Icon as Calendar,
+    // PencilEdit01Icon as Edit
 } from '@hugeicons/core-free-icons';
 
 // --- PILLAR 1: COLOR ARCHITECTURE ---
@@ -822,66 +822,90 @@ const TaskCard = ({ title }: { title: string }) => {
     const [notificationText, setNotificationText] = useState("set user notification");
 
     return (
-        <div className="task-card bg-white p-4 rounded-xl border border-slate-100 shadow-sm cursor-pointer transition-all duration-200 group/card animate-in fade-in zoom-in duration-300">
-            {/* Notification Text and Edit Icon */}
+        <div className="bg-white p-4 rounded-xl w-full border border-slate-100 shadow-sm hover:shadow-md transition-all duration-200 group cursor-pointer task-card">
+            {/* Header */}
             <div className="flex items-center justify-between mb-3 gap-2">
                 <div className="flex items-center gap-1 min-w-0 flex-1">
                     {isEditing ? (
                         <input
                             autoFocus
-                            className="bg-transparent border-b border-brand outline-none text-[10px] font-bold uppercase tracking-wider text-slate-500 w-full"
+                            className="bg-transparent border-b border-emerald-500 outline-none text-[10px] font-bold capitalize tracking-wider text-slate-500 w-full"
                             value={notificationText}
                             onChange={(e) => setNotificationText(e.target.value)}
                             onBlur={() => setIsEditing(false)}
                             onKeyDown={(e) => e.key === 'Enter' && setIsEditing(false)}
                         />
                     ) : (
-                        <div className="flex items-center gap-1 min-w-0 flex-1 group/edit">
-                            <span className="truncate text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        <div className="flex items-center gap-1 min-w-0 flex-1">
+                            <span className="truncate text-[10px] font-bold capitalize tracking-wider text-slate-400">
                                 {notificationText}
                             </span>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
-                                className="opacity-0 group-hover/card:opacity-100 transition-opacity flex-shrink-0 w-4 h-4 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-sm hover:border-brand/50 hover:bg-white transition-all"
-                            >
-                                <HugeiconsIcon icon={Edit} size={12} className="text-slate-400 hover:text-brand" />
-                            </button>
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
+                                    className="w-4 h-4 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-sm text-slate-400 hover:text-emerald-600"
+                                >
+                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     )}
                 </div>
-                <button className="text-slate-300 hover:text-slate-600 flex-shrink-0">
-                    <HugeiconsIcon icon={MoreHorizontal} size={16} />
+
+                <button className="text-slate-300 hover:text-slate-600">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="19" cy="12" r="1" />
+                        <circle cx="5" cy="12" r="1" />
+                    </svg>
                 </button>
             </div>
 
-            {/* Title with Surface Color BG */}
-            <div className="bg-brand-custom rounded-sm mb-3">
-                <h5 className="font-bold text-slate-500 text-sm leading-snug font-body">{title}</h5>
+            {/* Title / Surface */}
+            <div className="rounded-sm mb-3">
+                <h5 className="bg-emerald-50 font-bold text-slate-600 text-sm leading-snug p-1 rounded-sm">
+                    {title}
+                </h5>
             </div>
 
-            {/* Date Badge */}
-            <div className="inline-flex items-center gap-2 px-2 py-1 bg-slate-50 border border-slate-100/50 rounded-2xl mb-4">
-                <HugeiconsIcon icon={Calendar} size={12} className="text-slate-400" />
-                <span className="text-[10px] font-bold text-slate-500">Jan 30, 2026</span>
+            {/* Date */}
+            <div className="inline-flex items-center gap-2 px-2 py-1 bg-slate-50 border border-slate-100/50 rounded-full mb-4">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-slate-400">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span className="text-[10px] font-bold text-slate-500">
+                    Jan 30, 2026
+                </span>
             </div>
 
             {/* Footer */}
             <div className="flex items-center justify-between pt-3 border-t border-slate-50">
                 <div className="flex items-center gap-2 text-slate-500">
-                    <div className="w-4 h-4 flex items-center justify-center bg-brand/10 border border-brand/20 rounded-sm select-none">
-                        <HugeiconsIcon icon={Checkmark} size={12} className="text-brand" />
+                    <div className="w-4 h-4 flex items-center justify-center bg-emerald-100 border border-emerald-200 rounded-sm text-emerald-600">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
                     </div>
                     <span className="text-[10px] font-bold">SAM1-6</span>
                 </div>
-                <div className="w-5 h-5 rounded-full bg-brand-custom border border-brand/5 flex items-center justify-center text-brand shadow-sm">
-                    <HugeiconsIcon icon={User} size={12} />
+
+                <div className="w-6 h-6 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-sm">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
                 </div>
             </div>
         </div>
     );
 };
 
-const KanbanBoard = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
+const KanbanBoard = ({ onViewDetail }: { onViewDetail: (section: string) => void }) => {
     return (
         <div className="h-[600px] w-full bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col">
             <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
@@ -898,68 +922,24 @@ const KanbanBoard = ({ onShowCode }: { onShowCode: (title: string, code: string)
                     <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => onShowCode('Kanban Task Card', `const TaskCard = ({ title }) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [notificationText, setNotificationText] = useState("set user notification");
-
-    return (
-        <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm transition-all duration-200 group animate-in fade-in zoom-in">
-            {/* Header: Notification & Actions */}
-            <div className="flex items-center justify-between mb-3 gap-2">
-                <div className="flex items-center gap-1 min-w-0 flex-1">
-                    <div className="flex items-center gap-1 min-w-0 flex-1 group/edit">
-                        <span className="truncate text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                            \${notificationText}
-                        </span>
-                        <button className="opacity-0 group-hover:opacity-100 w-4 h-4 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-sm">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
-                        </button>
-                    </div>
-                </div>
-                <button className="text-slate-300 hover:text-slate-600">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                </button>
-            </div>
-
-            {/* Content: Title with Surface Color BG */}
-            <div className="bg-emerald-50/50 rounded-sm mb-3">
-                <h5 className="font-bold text-slate-500 text-sm leading-snug p-2 italic">\${title}</h5>
-            </div>
-
-            {/* Date Badge */}
-            <div className="inline-flex items-center gap-2 px-2 py-1 bg-slate-50 border border-slate-100/50 rounded-full mb-4">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                <span className="text-[10px] font-bold text-slate-500">Jan 30, 2026</span>
-            </div>
-
-            {/* Footer: Status & User */}
-            <div className="flex items-center justify-between pt-3 border-t border-slate-50">
-                <div className="flex items-center gap-2 text-slate-500">
-                    <div className="w-4 h-4 flex items-center justify-center bg-emerald-100 border border-emerald-200 rounded-sm">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                    </div>
-                    <span className="text-[10px] font-bold">SAM1-6</span>
-                </div>
-                <div className="w-5 h-5 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-sm">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                </div>
-            </div>
-        </div>
-    );
-};`)} icon={Code}>View Code</Button>
+                        onClick={() => onViewDetail('kanban')}
+                        icon={Code}
+                    >
+                        View Code
+                    </Button>
                     <Button variant="primary" size="sm" icon={Plus}>New Sprint</Button>
                 </div>
             </div>
             <div className="flex-1 overflow-x-auto p-6 bg-slate-50/50">
                 <div className="flex gap-6 h-full">
                     <KanbanColumn title="Backlog" count={12} onAddTask={() => { }}>
-                        <TaskCard title="Refactor Navigation Component" />
+                        <TaskCard title="Refactor Navigation" />
                         <TaskCard title="Update Color Palette Tokens" />
                         <TaskCard title="Fix Mobile Menu Glitch" />
                     </KanbanColumn>
                     <KanbanColumn title="In Progress" count={4} onAddTask={() => { }}>
                         <TaskCard title="Integrate Hugeicons Library" />
-                        <TaskCard title="Design System Documentation" />
+                        <TaskCard title="System Documentation" />
                     </KanbanColumn>
                     <KanbanColumn title="Completed" count={28} onAddTask={() => { }}>
                         <TaskCard title="Setup React Project" />
@@ -967,7 +947,7 @@ const KanbanBoard = ({ onShowCode }: { onShowCode: (title: string, code: string)
                     </KanbanColumn>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 
@@ -1002,7 +982,7 @@ const ChatMessage = ({ name, time, message, isSystem = false, isMe = false, avat
     );
 };
 
-const ChatSystem = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
+const ChatSystem = ({ onViewDetail }: { onViewDetail: (section: string) => void }) => {
     const channels = [
         { name: 'general', active: false },
         { name: 'design-system', active: true },
@@ -1061,14 +1041,15 @@ const ChatSystem = ({ onShowCode }: { onShowCode: (title: string, code: string) 
                         <div className="md:hidden mr-2">
                             <HugeiconsIcon icon={Kanban} size={20} className="text-slate-400" />
                         </div>
-                        <HugeiconsIcon icon={Hash} size={18} className="text-slate-400" />
-                        <h3 className="font-bold text-slate-800">design-system</h3>
-                        <span className="text-xs text-slate-400 ml-2 hidden sm:inline-block">Updated branding guidelines</span>
+                        {/* <HugeiconsIcon icon={Hash} size={18} className="text-slate-400" /> */}
+                        <h3 className="font-bold text-slate-800">Chat Interface</h3>
                     </div>
                     <div className="flex items-center gap-3">
-                        <button onClick={() => onShowCode('Chat System', '<ChatSystem />')} className="text-slate-400 hover:text-brand transition-colors" title="View Code">
-                            <HugeiconsIcon icon={Code} size={18} />
-                        </button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => onViewDetail('chat-system')}
+                        />
                         <div className="flex -space-x-2">
                             {[1, 2, 3].map(i => (
                                 <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500">U{i}</div>
@@ -1118,7 +1099,7 @@ const ChatSystem = ({ onShowCode }: { onShowCode: (title: string, code: string) 
     );
 };
 
-const TeamCollaboration = ({ onShowCode }: { onShowCode: (title: string, code: string) => void }) => {
+const TeamCollaboration = ({ onViewDetail }: { onViewDetail: (section: string) => void }) => {
     const [view, setView] = useState<'kanban' | 'chat'>('kanban');
 
     return (
@@ -1147,7 +1128,7 @@ const TeamCollaboration = ({ onShowCode }: { onShowCode: (title: string, code: s
             </div>
 
             <div className="mt-8">
-                {view === 'kanban' ? <KanbanBoard onShowCode={onShowCode} /> : <ChatSystem onShowCode={onShowCode} />}
+                {view === 'kanban' ? <KanbanBoard onViewDetail={onViewDetail} /> : <ChatSystem onViewDetail={onViewDetail} />}
             </div>
         </div>
     );
@@ -1179,58 +1160,58 @@ const Section = ({ title, subtitle, children }: SectionProps) => (
 
 // --- SYSTEM ICONS DATA ---
 const systemIcons = [
-    { name: 'Home', path: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>' },
-    { name: 'Search', path: '<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>' },
-    { name: 'Settings', path: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/>' },
-    { name: 'Bell', path: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>' },
-    { name: 'Plus', path: '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>' },
-    { name: 'X', path: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>' },
-    { name: 'Check', path: '<polyline points="20 6 9 17 4 12"/>' },
-    { name: 'Mail', path: '<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/><rect width="20" height="16" x="2" y="4" rx="2"/>' },
-    { name: 'Lock', path: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>' },
-    { name: 'User', path: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>' },
-    { name: 'Trash', path: '<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>' },
-    { name: 'Eye', path: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>' },
-    { name: 'Heart', path: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>' },
-    { name: 'Star', path: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>' },
-    { name: 'Cloud', path: '<path d="M17.5 19a5.5 5.5 0 0 0 0-11h-1.2l-.7-1.1c-1-1.9-3.1-3.1-5.6-3.1a6.6 6.6 0 0 0-6.5 6.4h-.2A4.4 4.4 0 0 0 3.3 19h14.2Z"/>' },
-    { name: 'Moon', path: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>' },
-    { name: 'Sun', path: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>' },
-    { name: 'ArrowRight', path: '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>' },
-    { name: 'ArrowLeft', path: '<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>' },
-    { name: 'ArrowUp', path: '<line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>' },
-    { name: 'ArrowDown', path: '<line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/>' },
-    { name: 'ExternalLink', path: '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>' },
-    { name: 'Share', path: '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>' },
-    { name: 'Download', path: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>' },
-    { name: 'Upload', path: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>' },
-    { name: 'Filter', path: '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>' },
-    { name: 'Menu', path: '<line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>' },
-    { name: 'MoreVertical', path: '<circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>' },
-    { name: 'MoreHorizontal', path: '<circle cx="12" cy="12" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>' },
-    { name: 'Grid', path: '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>' },
-    { name: 'List', path: '<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>' },
-    { name: 'Calendar', path: '<rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>' },
-    { name: 'Clock', path: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
-    { name: 'MapPin', path: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>' },
-    { name: 'Camera', path: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>' },
-    { name: 'Image', path: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>' },
-    { name: 'Music', path: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>' },
-    { name: 'Film', path: '<rect width="20" height="20" x="2" y="2" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>' },
-    { name: 'Monitor', path: '<rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>' },
-    { name: 'Smartphone', path: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>' },
-    { name: 'Database', path: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>' },
-    { name: 'Shield', path: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/>' },
-    { name: 'Award', path: '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/>' },
-    { name: 'ShoppingBag', path: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>' },
-    { name: 'ShoppingCart', path: '<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>' },
-    { name: 'Tag', path: '<path d="m11.5 2 9.2 9.2a2.1 2.1 0 0 1 0 3l-6.5 6.5a2.1 2.1 0 0 1-3 0L2 11.5V2h9.5Z"/><circle cx="7" cy="7" r="1"/>' },
-    { name: 'Package', path: '<path d="m7.5 4.21 4.5 2.6 4.5-2.6m-9 15.58V14.6L3 12V7.4l4.5-2.6L12 7.4l4.5-2.6L21 7.4V12l-4.5 2.6v5.19l-4.5 2.6-4.5-2.6Z"/><polyline points="3 7 12 12 21 7"/><line x1="12" y1="22" x2="12" y2="12"/>' },
-    { name: 'Flag', path: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>' },
-    { name: 'Briefcase', path: '<rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>' },
-    { name: 'Gift', path: '<polyline points="20 12 20 22 4 22 4 12"/><rect width="20" height="5" x="2" y="7"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z"/>' },
-    { name: 'Anchor', path: '<circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/>' },
-    { name: 'Zap', path: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>' },
+    { name: 'Home', path: '<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" />' },
+    { name: 'Search', path: '<circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />' },
+    { name: 'Settings', path: '<circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z" />' },
+    { name: 'Bell', path: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />' },
+    { name: 'Plus', path: '<line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />' },
+    { name: 'X', path: '<line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />' },
+    { name: 'Check', path: '<polyline points="20 6 9 17 4 12" />' },
+    { name: 'Mail', path: '<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /><rect width="20" height="16" x="2" y="4" rx="2" />' },
+    { name: 'Lock', path: '<rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />' },
+    { name: 'User', path: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />' },
+    { name: 'Trash', path: '<polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />' },
+    { name: 'Eye', path: '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />' },
+    { name: 'Heart', path: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />' },
+    { name: 'Star', path: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />' },
+    { name: 'Cloud', path: '<path d="M17.5 19a5.5 5.5 0 0 0 0-11h-1.2l-.7-1.1c-1-1.9-3.1-3.1-5.6-3.1a6.6 6.6 0 0 0-6.5 6.4h-.2A4.4 4.4 0 0 0 3.3 19h14.2Z" />' },
+    { name: 'Moon', path: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />' },
+    { name: 'Sun', path: '<circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />' },
+    { name: 'ArrowRight', path: '<line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />' },
+    { name: 'ArrowLeft', path: '<line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" />' },
+    { name: 'ArrowUp', path: '<line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />' },
+    { name: 'ArrowDown', path: '<line x1="12" y1="5" x2="12" y2="19" /><polyline points="19 12 12 19 5 12" />' },
+    { name: 'ExternalLink', path: '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />' },
+    { name: 'Share', path: '<path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" />' },
+    { name: 'Download', path: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />' },
+    { name: 'Upload', path: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" />' },
+    { name: 'Filter', path: '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />' },
+    { name: 'Menu', path: '<line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" />' },
+    { name: 'MoreVertical', path: '<circle cx="12" cy="12" r="1" /><circle cx="12" cy="5" r="1" /><circle cx="12" cy="19" r="1" />' },
+    { name: 'MoreHorizontal', path: '<circle cx="12" cy="12" r="1" /><circle cx="5" cy="12" r="1" /><circle cx="19" cy="12" r="1" />' },
+    { name: 'Grid', path: '<rect width="7" height="7" x="3" y="3" rx="1" /><rect width="7" height="7" x="14" y="3" rx="1" /><rect width="7" height="7" x="14" y="14" rx="1" /><rect width="7" height="7" x="3" y="14" rx="1" />' },
+    { name: 'List', path: '<line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />' },
+    { name: 'Calendar', path: '<rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />' },
+    { name: 'Clock', path: '<circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />' },
+    { name: 'MapPin', path: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" />' },
+    { name: 'Camera', path: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" />' },
+    { name: 'Image', path: '<rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" />' },
+    { name: 'Music', path: '<path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />' },
+    { name: 'Film', path: '<rect width="20" height="20" x="2" y="2" rx="2.18" ry="2.18" /><line x1="7" y1="2" x2="7" y2="22" /><line x1="17" y1="2" x2="17" y2="22" /><line x1="2" y1="12" x2="22" y2="12" /><line x1="2" y1="7" x2="7" y2="7" /><line x1="2" y1="17" x2="7" y2="17" /><line x1="17" y1="17" x2="22" y2="17" /><line x1="17" y1="7" x2="22" y2="7" />' },
+    { name: 'Monitor', path: '<rect width="20" height="14" x="2" y="3" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" />' },
+    { name: 'Smartphone', path: '<rect width="14" height="20" x="5" y="2" rx="2" ry="2" /><line x1="12" y1="18" x2="12.01" y2="18" />' },
+    { name: 'Database', path: '<ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" /><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />' },
+    { name: 'Shield', path: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />' },
+    { name: 'Award', path: '<circle cx="12" cy="8" r="7" /><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />' },
+    { name: 'ShoppingBag', path: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" />' },
+    { name: 'ShoppingCart', path: '<circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />' },
+    { name: 'Tag', path: '<path d="m11.5 2 9.2 9.2a2.1 2.1 0 0 1 0 3l-6.5 6.5a2.1 2.1 0 0 1-3 0L2 11.5V2h9.5Z" /><circle cx="7" cy="7" r="1" />' },
+    { name: 'Package', path: '<path d="m7.5 4.21 4.5 2.6 4.5-2.6m-9 15.58V14.6L3 12V7.4l4.5-2.6L12 7.4l4.5-2.6L21 7.4V12l-4.5 2.6v5.19l-4.5 2.6-4.5-2.6Z" /><polyline points="3 7 12 12 21 7" /><line x1="12" y1="22" x2="12" y2="12" />' },
+    { name: 'Flag', path: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" y1="22" x2="4" y2="15" />' },
+    { name: 'Briefcase', path: '<rect width="20" height="14" x="2" y="7" rx="2" /><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />' },
+    { name: 'Gift', path: '<polyline points="20 12 20 22 4 22 4 12" /><rect width="20" height="5" x="2" y="7" /><line x1="12" y1="22" x2="12" y2="7" /><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7Z" /><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7Z" />' },
+    { name: 'Anchor', path: '<circle cx="12" cy="5" r="3" /><line x1="12" y1="22" x2="12" y2="8" /><path d="M5 12H2a10 10 0 0 0 20 0h-3" />' },
+    { name: 'Zap', path: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />' },
 ];
 
 // --- MAIN PAGE LAYOUT ---
@@ -2280,7 +2261,279 @@ const EkontyDesignSystem = () => {
 
                     {
                         activeTab === 'Collaboration' && (
-                            <TeamCollaboration onShowCode={showCode} />
+                            <Section
+                                title=""
+                                subtitle="">
+                                {activeComponentDetail === 'kanban' ? (
+                                    <ComponentDetailView
+                                        title=""
+                                        onBack={() => setActiveComponentDetail(null)}
+                                        examples={[
+                                            {
+                                                title: "Kanban Task Card",
+                                                preview: (
+                                                    <div className="bg-white p-12 flex justify-center w-full max-w-md">
+                                                        <TaskCard title="Refactor Navigation Component" />
+                                                    </div>
+                                                ),
+                                                code: `
+<div className="bg-white p-4 rounded-xl w-full border border-slate-100 shadow-sm hover:shadow-md transition-all duration-200 group">
+
+      <div className="flex items-center justify-between mb-3 gap-2">
+        <div className="flex items-center gap-1 min-w-0 flex-1">
+          <span className="truncate text-[10px] font-bold capitalize tracking-wider text-slate-400">
+            set user notification
+          </span>
+
+          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="w-4 h-4 flex items-center justify-center bg-slate-50 border border-slate-200 rounded-sm text-slate-400 hover:text-emerald-600">
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="text-slate-300 hover:text-slate-600">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="1" />
+            <circle cx="19" cy="12" r="1" />
+            <circle cx="5" cy="12" r="1" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="rounded-sm mb-3 ">
+        <h5 className="bg-emerald-50 font-bold text-slate-600 text-sm leading-snug p-2 italic">
+          Refactor Navigation Component
+        </h5>
+      </div>
+
+      <div className="inline-flex items-center gap-2 px-2 py-1 bg-slate-50 border border-slate-100/50 rounded-full mb-4">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-slate-400"
+        >
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+          <line x1="16" y1="2" x2="16" y2="6" />
+          <line x1="8" y1="2" x2="8" y2="6" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        <span className="text-[10px] font-bold text-slate-500">
+          Jan 30, 2026
+        </span>
+      </div>
+
+      <div className="flex items-center justify-between pt-3 border-t border-slate-50">
+        <div className="flex items-center gap-2 text-slate-500">
+          <div className="w-4 h-4 flex items-center justify-center bg-emerald-100 border border-emerald-200 rounded-sm text-emerald-600">
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+          <span className="text-[10px] font-bold">SAM1-6</span>
+        </div>
+
+        <div className="w-6 h-6 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-sm">
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </div>
+      </div>
+    </div>`
+                                            },
+                                            {
+                                                title: "Add Task Button",
+                                                preview: (
+                                                    <div className="w-full max-sm bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                                                        <button className="w-full py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-brand hover:bg-white rounded-xl transition-all text-sm font-bold border border-transparent hover:border-slate-100 hover:shadow-sm">
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                                            <span>Add Task</span>
+                                                        </button>
+                                                    </div>
+                                                ),
+                                                code: `
+<button className="w-full py-2 flex items-center justify-center gap-2 text-slate-500 hover:text-emerald-800 hover:bg-white rounded-xl transition-all text-sm font-bold border border-transparent hover:border-slate-100 hover:shadow-sm">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    <span>Add Task</span>
+</button>`
+                                            }
+                                        ]}
+                                    />
+                                ) : activeComponentDetail === 'chat-system' ? (
+                                    <ComponentDetailView
+                                        title=""
+                                        onBack={() => setActiveComponentDetail(null)}
+                                        examples={[
+                                            {
+                                                title: "Messaging System",
+                                                preview: (
+                                                    <div className="bg-slate-50 p-8 w-full">
+                                                        <ChatSystem onViewDetail={() => { }} />
+                                                    </div>
+                                                ),
+                                                code: `
+<div className="h-[600px] w-full bg-white rounded-2xl border border-slate-200 overflow-hidden flex shadow-xl font-sans">
+  
+  <aside className="w-64 bg-slate-50 border-r border-slate-100 flex flex-col hidden md:flex">
+    <div className="p-4 border-b border-slate-100 flex items-center gap-3">
+       <div className="w-8 h-8 rounded-lg bg-emerald-800 flex items-center justify-center text-white font-bold text-sm">E</div>
+       <span className="font-bold text-slate-800">Ekonty Team</span>
+    </div>
+    <div className="flex-1 p-4">
+      <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Channels</h5>
+      <div className="space-y-1">
+        <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-xl shadow-sm border border-slate-100 text-emerald-800 font-bold text-sm cursor-pointer">
+          <span className="opacity-50 text-emerald-800">#</span> Dev. Team
+        </div>
+        <div className="flex items-center gap-2 px-3 py-2 text-slate-500 hover:bg-slate-100 rounded-xl transition-all text-sm cursor-pointer">
+          <span className="opacity-50">#</span> General
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div className="flex-1 flex flex-col bg-slate-50/30">
+    
+    <header className="h-16 border-b border-slate-100 bg-white flex items-center justify-between px-6">
+      <div className="flex items-center gap-2">
+        <span className="text-xl font-bold text-slate-800">Chat Section</span>
+      </div>
+      <div className="flex -space-x-2">
+        <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500">JD</div>
+        <div className="w-8 h-8 rounded-full border-2 border-white bg-slate-300 flex items-center justify-center text-[10px] font-bold text-slate-600">SM</div>
+      </div>
+    </header>
+
+    <div className="flex-1 p-6 space-y-8">
+      
+      <div className="flex items-center justify-center gap-4">
+        <div className="h-px flex-1 bg-slate-200 mx-10"></div>
+        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Kofi Joined the channel</span>
+        <div className="h-px flex-1 bg-slate-200 mx-10"></div>
+      </div>
+
+      <div className="flex gap-4 group">
+        <div className="w-9 h-9 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center text-slate-500 font-bold text-xs ring-1 ring-slate-100">S</div>
+        <div className="flex flex-col max-w-[70%]">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-[11px] font-bold text-slate-700">Sarah David</span>
+            <span className="text-[9px] text-slate-400 font-bold">10:30 AM</span>
+          </div>
+          <div className="p-4 bg-white rounded-2xl rounded-tl-none shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-slate-100 text-sm text-slate-600 leading-relaxed">
+            Hey team! I've just updated the typography tokens in the main branch.
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-4">
+        <div className="w-9 h-9 rounded-full bg-slate-200 border-2 border-white shadow-sm flex items-center justify-center text-slate-600 font-bold text-xs">M</div>
+        <div className="flex flex-col max-w-[70%]">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-[11px] font-bold text-slate-700">Mike Johnson</span>
+            <span className="text-[9px] text-slate-400 font-bold">10:32 AM</span>
+          </div>
+          <div className="p-4 bg-white rounded-2xl rounded-tl-none shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-slate-100 text-sm text-slate-600 leading-relaxed">
+            Awesome! Does this include the new Inter font weights?
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-2 px-1">
+            <span className="text-[11px] font-bold text-slate-800">Kofi Mensah</span>
+            <span className="text-[9px] font-bold text-slate-400">10:42 AM</span>
+          </div>
+          <div className="p-4 bg-emerald-800 text-white rounded-2xl rounded-tr-none shadow-lg shadow-emerald-800/20 text-sm leading-relaxed max-w-[70%]">
+            Great work! I'll update the Kanban board components to use them.
+          </div>
+      </div>
+
+      <div className="flex items-center gap-3 px-1 opacity-40">
+        <div className="flex gap-1">
+          <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" ></div>
+          <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" ></div>
+          <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" ></div>
+        </div>
+        <span className="text-[11px] font-bold text-slate-500 italic">Sarah is typing...</span>
+      </div>
+
+    </div>
+
+    <div className="p-6 bg-white border-t border-slate-100">
+      <div className="relative flex items-center">
+        <input 
+          type="text" 
+          placeholder="Message #design-system..." 
+          className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3.5 pl-5 pr-32 focus:outline-none focus:ring-4 focus:ring-emerald-800/5 focus:border-emerald-800 transition-all text-[13px] placeholder:text-slate-400 font-medium"
+        />
+        <div className="absolute right-3 flex items-center gap-1.5">
+           <button className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl transition-colors">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.51a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+           </button>
+           <button className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl transition-colors">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+           </button>
+           <button className="p-2.5 bg-emerald-800 text-white rounded-xl shadow-md hover:scale-105 active:scale-95 transition-all">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+           </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>`
+                                            }
+                                        ]}
+                                    />
+                                ) : (
+                                    <TeamCollaboration onViewDetail={setActiveComponentDetail} />
+                                )}
+                            </Section>
                         )
                     }
                 </div>
